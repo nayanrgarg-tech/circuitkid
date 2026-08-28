@@ -1,0 +1,28 @@
+{
+  "name": "circuitkid",
+  "version": "1.0.0",
+  "private": true,
+  "description": "CircuitKid — video-lesson electronics & robotics course for kids and beginners.",
+  "scripts": {
+    "dev": "next dev -p 3111",
+    "build": "next build",
+    "start": "npx serve out -l 3111",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "issue-login": "node scripts/issue-login.mjs",
+    "logins": "node scripts/issue-login.mjs --list"
+  },
+  "dependencies": {
+    "next": "15.1.6",
+    "react": "19.0.0",
+    "react-dom": "19.0.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/node": "22.10.7",
+    "@types/react": "19.0.7",
+    "@types/react-dom": "19.0.3",
+    "tailwindcss": "^4.3.3",
+    "typescript": "5.7.3"
+  }
+}
