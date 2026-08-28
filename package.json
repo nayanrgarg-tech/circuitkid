@@ -10,7 +10,10 @@
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "issue-login": "node scripts/issue-login.mjs",
-    "logins": "node scripts/issue-login.mjs --list"
+    "logins": "node scripts/issue-login.mjs --list",
+    "seal": "node scripts/seal.mjs",
+    "unseal": "node scripts/unseal.mjs",
+    "add-lesson": "node scripts/add-lesson.mjs"
   },
   "dependencies": {
     "next": "15.1.6",
@@ -23,6 +26,7 @@
     "@types/react": "19.0.7",
     "@types/react-dom": "19.0.3",
     "tailwindcss": "^4.3.3",
+    "tsx": "^4.23.12",
     "typescript": "5.7.3"
   }
 }

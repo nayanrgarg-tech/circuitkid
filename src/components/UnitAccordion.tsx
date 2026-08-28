@@ -13,7 +13,7 @@ import Link from 'next/link';
 import VideoEmbed from '@/components/VideoEmbed';
 import { DoneTick, ProgressBar } from '@/components/Progress';
 import { Pill, accent } from '@/components/ui';
-import { useProgressStats } from '@/lib/student';
+import { useProgressStats, useStudent } from '@/lib/student';
 import type { Lesson, Resource, ResourceKind, Unit } from '@/lib/types';
 
 const RESOURCE_EMOJI: Record<ResourceKind, string> = {
@@ -57,6 +57,8 @@ function ResourceChip({ resource }: { resource: Resource }) {
 }
 
 function LessonRow({ lesson }: { lesson: Lesson }) {
+  const { lesson: contentFor } = useStudent();
+  const content = contentFor(lesson.slug);
   return (
     <li className="border-t border-cream/8 px-5 py-5 transition-colors hover:bg-cream/[0.03] sm:px-6">
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
@@ -78,27 +80,37 @@ function LessonRow({ lesson }: { lesson: Lesson }) {
 
       <p className="mt-2 max-w-3xl text-sm leading-relaxed text-cream-faint">{lesson.blurb}</p>
 
-      {lesson.resources.length > 0 && (
-        <ul className="mt-3 flex flex-wrap items-center gap-1.5">
-          {lesson.resources.map((r) => (
-            <li key={`${r.kind}-${r.label}`}>
-              <ResourceChip resource={r} />
-            </li>
-          ))}
-        </ul>
+      {content ? (
+        <>
+          {content.resources.length > 0 && (
+            <ul className="mt-3 flex flex-wrap items-center gap-1.5">
+              {content.resources.map((r) => (
+                <li key={`${r.kind}-${r.label}`}>
+                  <ResourceChip resource={r} />
+                </li>
+              ))}
+            </ul>
+          )}
+          <details className="group/vid mt-3">
+            <summary className="inline-flex w-fit cursor-pointer list-none items-center gap-2 rounded-full border-2 border-ink-line bg-ink-700 px-3 py-1.5 text-xs font-bold transition-transform hover:-translate-y-0.5 [&::-webkit-details-marker]:hidden">
+              <span className="transition-transform duration-200 group-open/vid:rotate-90" aria-hidden>
+                &rsaquo;
+              </span>
+              Watch here
+            </summary>
+            <div className="mt-3 max-w-2xl">
+              <VideoEmbed src={content.video} title={lesson.title} />
+            </div>
+          </details>
+        </>
+      ) : (
+        <p className="mt-3 text-xs font-semibold text-cream-faint">
+          <Link href="/login" className="underline underline-offset-4 hover:text-brand-600">
+            Sign in
+          </Link>{' '}
+          to watch this lesson and open its code and wiring.
+        </p>
       )}
-
-      <details className="group/vid mt-3">
-        <summary className="inline-flex w-fit cursor-pointer list-none items-center gap-2 rounded-full bg-brand-500/12 px-3 py-1.5 text-xs font-bold text-brand-300 ring-1 ring-brand-500/25 transition-colors hover:bg-brand-500/20 [&::-webkit-details-marker]:hidden">
-          <span className="transition-transform duration-200 group-open/vid:rotate-90" aria-hidden>
-            ▶
-          </span>
-          Watch here
-        </summary>
-        <div className="mt-3 max-w-2xl">
-          <VideoEmbed src={lesson.video} title={lesson.title} poster={lesson.resources} />
-        </div>
-      </details>
     </li>
   );
 }
@@ -112,7 +124,7 @@ export default function UnitAccordion({ unit }: { unit: Unit }) {
   const trackedCount = unit.lessons.filter((l) => !l.optional).length;
   const progress = byUnit[unit.id] ?? { done: 0, total: trackedCount };
   const a = accent(unit.accent);
-  const unfilmed = unit.lessons.filter((l) => !l.video).length;
+  const unfilmed = unit.lessons.filter((l) => !l.hasVideo).length;
 
   // Deep links like /curriculum#unit-3 should land on an open unit — on first
   // paint and when the hash changes while already on the page.

@@ -1,22 +1,22 @@
 import type { Metadata } from 'next';
-import { Baloo_2, Outfit } from 'next/font/google';
+import { Fredoka, Inter } from 'next/font/google';
 import './globals.css';
 import { StudentProvider } from '@/lib/student';
 import Nav from '@/components/Nav';
 import Footer from '@/components/Footer';
 import { site, asset, BASE_PATH } from '@/data/site';
 
-const baloo = Baloo_2({
+const fredoka = Fredoka({
   subsets: ['latin'],
-  weight: ['500', '600', '700', '800'],
-  variable: '--font-baloo',
+  weight: ['500', '600', '700'],
+  variable: '--font-fredoka',
   display: 'swap',
 });
 
-const outfit = Outfit({
+const inter = Inter({
   subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700'],
-  variable: '--font-outfit',
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-inter',
   display: 'swap',
 });
 
@@ -41,12 +41,12 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${baloo.variable} ${outfit.variable}`}>
-      <body className="min-h-dvh flex flex-col">
+    <html lang="en" className={`${fredoka.variable} ${inter.variable}`}>
+      <body className="min-h-dvh flex flex-col bg-ink-900 text-cream">
         <StudentProvider>
           <a
             href="#main"
-            className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:rounded-full focus:bg-brand-500 focus:px-4 focus:py-2 focus:font-semibold focus:text-ink-900"
+            className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:rounded-full focus:border-[3px] focus:border-ink-line focus:bg-brand-500 focus:px-4 focus:py-2 focus:font-semibold focus:text-cream"
           >
             Skip to content
           </a>

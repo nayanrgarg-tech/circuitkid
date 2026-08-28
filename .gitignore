@@ -5,3 +5,9 @@ next-env.d.ts
 *.tsbuildinfo
 .DS_Store
 .env*.local
+
+# master key for the encrypted course content — never commit
+.course-key
+
+# course source — holds unlisted video URLs, never commit to a public repo
+content/

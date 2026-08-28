@@ -2,41 +2,72 @@
 
 /* ------------------------------------------------------------------ *
  *  CircuitKid design tokens
- *  Warm, high-contrast, single dark theme. Orange is the brand; each
- *  unit gets its own accent so the curriculum reads like a map.
+ *
+ *  Warm paper, ink borders, hard offset shadows, candy accents.
+ *  ONE LIGHT THEME. The token *names* are unchanged from the old dark
+ *  theme so every component keeps working — only the values flipped:
+ *
+ *    ink-900..400   surfaces, light. ink-900 = the page, ink-700 = a card.
+ *    ink-line       the border + hard-shadow colour. The signature.
+ *    cream / -dim / -faint   text, dark. cream = body text.
+ *
+ *  Rule of thumb: borders are always ink-line, never an accent. Shadows
+ *  are hard offsets with zero blur. Nothing glows.
  * ------------------------------------------------------------------ */
 @theme {
-  --color-ink-900: #120c09;
-  --color-ink-800: #17100c;
-  --color-ink-700: #1e1611;
-  --color-ink-600: #291d16;
-  --color-ink-500: #3a291f;
-  --color-ink-400: #554032;
+  /* ---- surfaces (light) ---- */
+  --color-ink-900: #f7f3f0; /* warm paper — page background */
+  --color-ink-800: #efe8e3; /* alternating section band */
+  --color-ink-700: #ffffff; /* card surface */
+  --color-ink-600: #faf7f5; /* secondary surface */
+  --color-ink-500: #ece4de; /* subtle warm grey */
+  --color-ink-400: #ded3cb; /* stronger warm grey, hairlines */
 
-  --color-cream: #fff6ee;
-  --color-cream-dim: #e8d5c5;
-  --color-cream-faint: #b39c8b;
+  /* ---- the ink: every border, every hard shadow ---- */
+  --color-ink-line: #2a201a;
 
-  --color-brand-300: #ffb185;
-  --color-brand-400: #ff9257;
-  --color-brand-500: #ff7a33;
-  --color-brand-600: #e05e1c;
-  --color-brand-700: #a4471f;
-  /* Deep warm brown used only for large drop shadows. */
-  --color-brand-900: #3d1a0c;
+  /* ---- text (dark) ---- */
+  --color-cream: #1b1613;
+  --color-cream-dim: #5f5751;
+  --color-cream-faint: #948a83;
 
-  --color-lime: #a3e635;
-  --color-cyan: #38d9f0;
-  --color-violet: #a78bfa;
-  --color-amber: #fbbf24;
-  --color-pink: #f472b6;
-  --color-orange: #ff7a33;
-  --color-slate: #94a3b8;
+  /* ---- brand orange ----
+     The ramp inverts with the theme: 300 is now the DARKEST (text on
+     paper), 400 the lightest (fills and hovers — do not set text in it). */
+  --color-brand-300: #a8460f;
+  --color-brand-400: #ff7a33;
+  --color-brand-500: #e05e1c;
+  --color-brand-600: #b8480f;
+  --color-brand-700: #8a3609;
+  --color-brand-900: #2a201a; /* was the drop-shadow brown; now ink */
 
-  --font-display: var(--font-baloo), 'Trebuchet MS', system-ui, sans-serif;
-  --font-sans: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
+  /* ---- candy pops: fills, dots, illustration ---- */
+  --color-lime: #23ab5a;
+  --color-cyan: #3d6ef0;
+  --color-violet: #8b46e0;
+  --color-amber: #f7b52c;
+  --color-pink: #f5539b;
+  --color-orange: #e05e1c;
+  --color-slate: #948a83;
 
-  --radius-card: 1.25rem;
+  /* ---- the same pops, darkened for TEXT on paper (>= 4.5:1) ----
+     Use these any time an accent carries words. The plain pop above is
+     for fills, dots and borders only. */
+  --color-lime-deep: #17803f;
+  --color-cyan-deep: #2a4fc7;
+  --color-violet-deep: #6a2bc0;
+  --color-amber-deep: #8a5a06;
+  --color-pink-deep: #c31d68;
+  --color-slate-deep: #6b625c;
+
+  --font-display: var(--font-fredoka), 'Trebuchet MS', system-ui, sans-serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  --radius-card: 1.375rem; /* 22px */
+  --radius-photo: 0.5rem; /* 8px — polaroid corners */
+
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.7, 0.5, 1); /* overshoots, use on hovers */
 
   --animate-float: float 6s ease-in-out infinite;
   --animate-spark: spark 2.4s ease-in-out infinite;
@@ -64,10 +95,7 @@ html {
 }
 
 body {
-  background:
-    radial-gradient(900px 500px at 12% -8%, rgba(255, 122, 51, 0.16), transparent 60%),
-    radial-gradient(700px 420px at 92% 4%, rgba(167, 139, 250, 0.12), transparent 62%),
-    var(--color-ink-900);
+  background: var(--color-ink-900);
   color: var(--color-cream);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
@@ -76,23 +104,22 @@ body {
 
 h1, h2, h3, h4, .font-display {
   font-family: var(--font-display);
-  letter-spacing: -0.015em;
+  letter-spacing: -0.01em;
 }
 
 ::selection {
-  background: var(--color-brand-500);
-  color: var(--color-ink-900);
+  background: var(--color-amber);
+  color: var(--color-ink-line);
 }
 
 :focus-visible {
-  outline: 3px solid var(--color-brand-400);
+  outline: 3px solid var(--color-brand-600);
   outline-offset: 3px;
   border-radius: 6px;
 }
 
-/* Warm, unobtrusive scrollbar so long lesson lists still feel on-brand. */
 * {
-  scrollbar-color: var(--color-ink-500) transparent;
+  scrollbar-color: var(--color-ink-400) transparent;
   scrollbar-width: thin;
 }
 
@@ -105,14 +132,109 @@ h1, h2, h3, h4, .font-display {
   }
 }
 
-/* ---- small composable utilities used across pages ---------------- */
+/* ---- composable utilities ---------------------------------------- *
+ *  card            static neo-brutalist card (22px corners)
+ *  polaroid        photo-style card, 8px corners, lifts on hover
+ *  polaroid-photo  polaroid + resting tilt that alternates by position
+ *  tape            translucent tape strip across the top edge
+ *  hard-shadow*    the offset shadow on its own, xs / sm / base / lg
+ *  press           physical press: shadow collapses on :active
+ *  grid-dots       faint ink dot grid
+ * ------------------------------------------------------------------ */
+
 @utility card {
   border-radius: var(--radius-card);
-  border: 1px solid --alpha(var(--color-cream) / 10%);
-  background: --alpha(var(--color-ink-700) / 80%);
+  border: 3px solid var(--color-ink-line);
+  background: var(--color-ink-700);
+  box-shadow: 6px 6px 0 var(--color-ink-line);
+}
+
+@utility hard-shadow {
+  box-shadow: 6px 6px 0 var(--color-ink-line);
+}
+@utility hard-shadow-xs {
+  box-shadow: 2px 2px 0 var(--color-ink-line);
+}
+@utility hard-shadow-sm {
+  box-shadow: 3px 3px 0 var(--color-ink-line);
+}
+@utility hard-shadow-lg {
+  box-shadow: 9px 13px 0 var(--color-ink-line);
+}
+
+@utility polaroid {
+  position: relative;
+  border-radius: var(--radius-photo);
+  border: 3px solid var(--color-ink-line);
+  background: var(--color-ink-700);
+  box-shadow: 6px 6px 0 var(--color-ink-line);
+  transition:
+    transform 0.28s var(--ease-bounce),
+    box-shadow 0.28s var(--ease-bounce);
+
+  &:hover {
+    transform: rotate(0deg) translateY(-5px) scale(1.02);
+    box-shadow: 9px 13px 0 var(--color-ink-line);
+  }
+}
+
+/* Same card, but it sits on the page slightly askew. The tilt cycles by
+   position, so a gallery of these never lines up. */
+@utility polaroid-photo {
+  position: relative;
+  border-radius: var(--radius-photo);
+  border: 3px solid var(--color-ink-line);
+  background: var(--color-ink-700);
+  box-shadow: 6px 6px 0 var(--color-ink-line);
+  transform: rotate(-2.5deg);
+  transition:
+    transform 0.28s var(--ease-bounce),
+    box-shadow 0.28s var(--ease-bounce);
+
+  &:nth-child(3n + 2) {
+    transform: rotate(2deg);
+  }
+  &:nth-child(3n) {
+    transform: rotate(-1.5deg);
+  }
+  /* stays last: same specificity as the nth-child rules above */
+  &:hover {
+    transform: rotate(0deg) translateY(-5px) scale(1.02);
+    box-shadow: 9px 13px 0 var(--color-ink-line);
+  }
+}
+
+@utility tape {
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -0.7rem;
+    left: 50%;
+    z-index: 2;
+    height: 1.5rem;
+    width: 5.75rem;
+    transform: translateX(-50%) rotate(-1.6deg);
+    border-radius: 2px;
+    background: --alpha(var(--color-amber) / 55%);
+    box-shadow: inset 0 0 0 1px --alpha(var(--color-ink-line) / 14%);
+    pointer-events: none;
+  }
+}
+
+@utility press {
+  transition:
+    transform 0.14s var(--ease-soft),
+    box-shadow 0.14s var(--ease-soft);
+
+  &:active {
+    transform: translate(2px, 3px);
+    box-shadow: 2px 2px 0 var(--color-ink-line);
+  }
 }
 
 @utility grid-dots {
-  background-image: radial-gradient(--alpha(var(--color-cream) / 8%) 1px, transparent 1px);
+  background-image: radial-gradient(--alpha(var(--color-ink-line) / 9%) 1px, transparent 1px);
   background-size: 22px 22px;
 }
