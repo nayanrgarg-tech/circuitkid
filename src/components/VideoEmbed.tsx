@@ -19,13 +19,16 @@ export default function VideoEmbed({
       <div className="grid-dots relative aspect-video w-full overflow-hidden rounded-card border border-cream/12 bg-ink-700">
         <div className="absolute inset-0 grid place-items-center p-6 text-center">
           <div>
-            <div className="mx-auto mb-4 grid h-16 w-16 animate-spark place-items-center rounded-2xl bg-brand-500/20 text-3xl">
-              🎬
+            <div
+              aria-hidden
+              className="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-2xl bg-brand-500/20 text-3xl"
+            >
+              ▶
             </div>
-            <p className="font-display text-lg font-bold">Video coming soon</p>
+            <p className="font-display text-lg font-bold">The video goes here</p>
             <p className="mx-auto mt-2 max-w-sm text-sm leading-relaxed text-cream-faint">
-              This lesson is being filmed. Everything below — the materials list and the
-              step-by-step goals — works without it.
+              It gets added later. The materials list and the step-by-step goals below work without
+              it.
             </p>
             {poster && poster.length > 0 && (
               <p className="mt-4 text-xs text-cream-faint">

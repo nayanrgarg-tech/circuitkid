@@ -6,7 +6,7 @@ import { links, site } from '@/data/site';
 
 export const metadata: Metadata = {
   title: 'Curriculum',
-  description: `Every lesson in the ${site.name} course. ${stats.units} units plus a shelf of extras, ending in the Inventor Lab builds. ${stats.lessons} lessons, ${stats.videos} of them filmed so far.`,
+  description: `Every lesson in the ${site.name} course. ${stats.units} units plus a shelf of extras, ending in the Inventor Lab builds. Start at Unit 0 and work down.`,
 };
 
 export default function CurriculumPage() {
@@ -19,11 +19,10 @@ export default function CurriculumPage() {
           title="Curriculum"
           sub={
             <>
-              {stats.units} units, plus a shelf of extras for when something breaks. That is{' '}
-              <strong className="font-semibold text-cream">{stats.lessons} lessons</strong>, and{' '}
-              <strong className="font-semibold text-cream">{stats.videos}</strong> of them are filmed
-              so far. Start at Unit 0 and go down the list. Side quests are optional. Do them when
-              you feel like pushing further.
+              {stats.units} units, plus a shelf of extras for when something breaks. Every unit
+              builds on the one before it, so{' '}
+              <strong className="font-semibold text-cream">start at Unit 0</strong> and go down the
+              list. Side quests are optional. Do them when you feel like pushing further.
             </>
           }
         />
@@ -60,13 +59,13 @@ export default function CurriculumPage() {
 
           <ul className="mt-5 flex flex-wrap gap-2 border-t border-cream/8 pt-4">
             <li>
-              <Pill tone="brand">📚 {stats.lessons} lessons</Pill>
-            </li>
-            <li>
-              <Pill tone="good">🎥 {stats.videos} videos ready</Pill>
+              <Pill tone="brand">{stats.units} units</Pill>
             </li>
             <li>
               <Pill>🚀 {stats.capstones} big builds</Pill>
+            </li>
+            <li>
+              <Pill tone="good">Live help every week</Pill>
             </li>
             <li>
               <Pill tone="muted">{site.ages}</Pill>
@@ -98,13 +97,11 @@ export default function CurriculumPage() {
                 together on screen.
               </p>
               <p className="mt-3 text-sm leading-relaxed text-cream-faint">
-                I am still filming.{' '}
+                Every lesson lists{' '}
                 <span className="font-semibold text-cream-dim">
-                  {stats.videos} of the {stats.lessons} lessons
-                </span>{' '}
-                have video today. The rest already list their parts and their code, so you can get
-                ahead of me if you want. Each video lands on its own lesson page the day I record
-                it.
+                  the parts you need and the code you run
+                </span>
+                , so you can work ahead whenever you want.
               </p>
             </div>
             <div className="flex shrink-0 flex-col gap-3">

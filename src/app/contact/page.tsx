@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 import { Btn, Card, Pill, Section, SectionHead, accent } from '@/components/ui';
-import { stats } from '@/data/curriculum';
 import { links, site } from '@/data/site';
 
 export const metadata: Metadata = {
@@ -53,7 +52,7 @@ const routes: Route[] = [
   {
     kind: 'Email',
     title: 'Email',
-    body: 'Write to me about anything. Shipping questions, or a project idea you want to try that I have not filmed yet.',
+    body: 'Write to me about anything. Shipping questions, or a project idea you want to try that is not in the course yet.',
     cta: site.email,
     href: `mailto:${site.email}`,
     accentKey: 'cyan',
@@ -102,10 +101,9 @@ const faqs: Faq[] = [
     q: 'How long does the course take?',
     a: (
       <>
-        As long as your kid wants it to. There are {stats.lessons} lessons and no clock running on
-        any of them. Some students do one a night. Others sit on a single build all Saturday because
-        they keep adding to it. The Inventor Lab projects at the end are the long ones, and that is
-        rather the point of them.
+        As long as your kid wants it to. There is no clock running on any lesson. Some students do
+        one a night. Others sit on a single build all Saturday because they keep adding to it. The
+        Inventor Lab projects at the end are the long ones, and that is rather the point of them.
       </>
     ),
   },
@@ -191,10 +189,9 @@ export default function ContactPage() {
           <div className="max-w-2xl space-y-5 text-lg leading-relaxed text-cream-dim">
             <p>
               {site.name} teaches electronics and programming on real Arduino hardware. Your student
-              gets a box with every part in it and {stats.lessons} video lessons that go in order.
-              The course ends in the Inventor Lab, where the builds get big. An RC car assembled
-              from a bare chassis. A tic-tac-toe board that plays against you. I am still filming
-              the rest of those projects.
+              gets a box with every part in it and video lessons that go in order. The course ends
+              in the Inventor Lab, where the builds get big. An RC car assembled from a bare
+              chassis. A tic-tac-toe board that plays against you.
             </p>
             <p>
               It all happens online, live help sessions included, so there is nothing to drive to.

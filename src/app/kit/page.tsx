@@ -6,7 +6,7 @@ import { stats } from '@/data/curriculum';
 
 export const metadata: Metadata = {
   title: 'The Kit',
-  description: `Every part needed for all ${stats.lessons} ${site.name} lessons and all ${stats.capstones} capstone projects. An Arduino UNO R4, 30+ sensor modules, screens, motors and a robot car chassis, sorted into labeled cases.`,
+  description: `Every part needed for the ${site.name} course and all ${stats.capstones} capstone projects. An Arduino UNO R4, 30+ sensor modules, screens, motors and a robot car chassis, sorted into labeled cases.`,
 };
 
 /** The five parts people ask about before anything else. */
@@ -53,8 +53,7 @@ export default function KitPage() {
               The <span className="text-brand-600">CircuitKid</span> Kit
             </h1>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-cream-dim sm:text-xl">
-              Every part for all {stats.lessons} lessons and all {stats.capstones} capstone
-              projects, shipped to your door in one box. Sorted into labeled cases before it goes
+              Every part for the whole course and all {stats.capstones} capstone projects, shipped to your door in one box. Sorted into labeled cases before it goes
               out, so day one is not a mystery bag of parts.
             </p>
             <div className="mt-9 flex flex-wrap items-center gap-3">

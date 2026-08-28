@@ -2,7 +2,8 @@
 /**
  * Issue, list and revoke CircuitKid student logins.
  *
- *   npm run issue-login -- "Ava Patel"            # one login
+ *   npm run issue-login -- "Ava Patel"            # one login, random code
+ *   npm run issue-login -- "Ava" --code KIT-2026   # or choose the code yourself
  *   npm run issue-login -- "Ava" "Ben" "Cleo"     # several at once
  *   npm run issue-login -- --blank 5              # 5 unassigned codes for a class
  *   npm run issue-login -- --list
@@ -42,8 +43,9 @@ function uniqueId(base) {
   return id;
 }
 
-async function issue(name) {
-  const code = generateCode();
+async function issue(name, chosen, chosenRaw) {
+  const code = chosen || generateCode();
+  const shown = chosenRaw || code;
   const normalized = normalize(code);
   const { salt, wrap } = await wrapCourseKey(courseKey, normalized);
   const student = {
@@ -57,7 +59,7 @@ async function issue(name) {
     issued: new Date().toISOString().slice(0, 10),
   };
   roster.students.push(student);
-  return { student, code };
+  return { student, code: shown };
 }
 
 if (argv.includes('--list')) {
@@ -88,22 +90,55 @@ if (revokeAt !== -1) {
   process.exit(0);
 }
 
+/* --code lets you pick a memorable code instead of a random one, so a login can
+   be re-created exactly if it is ever lost. */
+const codeAt = argv.indexOf('--code');
+const chosenRaw = codeAt !== -1 ? (argv[codeAt + 1] || '') : null;
+const chosenCode = chosenRaw !== null ? normalize(chosenRaw) : null;
+if (codeAt !== -1) {
+  if (chosenCode.length < 8) {
+    console.error('\n  --code needs at least 8 letters/digits. Punctuation is ignored,\n  so ROBOT-KID-2026 and robotkid2026 are the same code.\n');
+    process.exit(1);
+  }
+  if (roster.students.some((s) => s.hash === sha256(chosenCode))) {
+    console.error('\n  That code is already issued to someone. Pick another.\n');
+    process.exit(1);
+  }
+}
+
 const blankAt = argv.indexOf('--blank');
+if (chosenCode && argv.filter((a, i) => !a.startsWith('--') && i !== codeAt + 1).length > 1) {
+  console.error('\n  --code sets one specific code, so give it exactly one name.\n');
+  process.exit(1);
+}
+
 const names =
   blankAt !== -1
     ? Array.from({ length: Number(argv[blankAt + 1] || 1) }, (_, i) => `Student ${roster.students.length + i + 1}`)
-    : argv.filter((a) => !a.startsWith('--'));
+    : argv.filter((a, i) => !a.startsWith('--') && !(codeAt !== -1 && i === codeAt + 1));
 
 if (!names.length) {
-  console.error('Usage: npm run issue-login -- "Student Name"   (or --blank 5, --list, --revoke <id>)');
+  console.error([
+    '',
+    '  Usage:',
+    '    npm run issue-login -- "Ava Patel"                     one student, random code',
+    '    npm run issue-login -- "Ava" --code ROBOT-KID-2026     pick the code yourself',
+    '    npm run issue-login -- "Ava" "Ben" "Cleo"              several at once',
+    '    npm run issue-login -- --blank 5                       5 unassigned codes',
+    '    npm run issue-login -- --list                          who has a login',
+    '    npm run issue-login -- --revoke ava-patel              remove one',
+    '',
+  ].join('\n'));
   process.exit(1);
 }
 
 const issued = [];
-for (const n of names) issued.push(await issue(n));
+for (const n of names) issued.push(await issue(n, chosenCode, chosenRaw));
 write(roster);
 
-console.log('\n  ✅ Hand these out — they are shown only once:\n');
+console.log(chosenCode
+  ? '\n  Login created:\n'
+  : '\n  Hand these out — random codes are shown only once:\n');
 for (const { student, code } of issued) {
   console.log(`     ${student.name.padEnd(24)} ${code}`);
 }

@@ -19,7 +19,7 @@ export type Lesson = {
   title: string;
   unitId: string;
   blurb: string;
-  /** Lets the outline say "still filming" without revealing the video. */
+  /** Whether a video exists, without revealing its URL. */
   hasVideo: boolean;
   optional?: boolean;
   /** Inventor Lab letter (A–E). */

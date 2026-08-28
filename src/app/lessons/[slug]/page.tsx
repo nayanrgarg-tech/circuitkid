@@ -25,7 +25,7 @@ export default async function LessonPage({ params }: { params: Promise<{ slug: s
 
   const unit = unitById.get(lesson.unitId);
   const a = accent(unit?.accent ?? 'orange');
-  const { prev, next, index } = lessonNeighbours(slug);
+  const { prev, next } = lessonNeighbours(slug);
   const project = lesson.project ? capstones.find((c) => c.letter === lesson.project) : undefined;
 
   return (
@@ -66,7 +66,6 @@ export default async function LessonPage({ params }: { params: Promise<{ slug: s
 
           <div className="mt-5 flex flex-wrap gap-2">
             {lesson.optional && <Pill tone="muted">Side quest</Pill>}
-            {!lesson.hasVideo && <Pill tone="muted">Not filmed yet</Pill>}
             {project && (
               <Link href="/curriculum#unit-5">
                 <Pill tone="brand">Inventor Lab &middot; {project.name}</Pill>
@@ -98,7 +97,7 @@ export default async function LessonPage({ params }: { params: Promise<{ slug: s
         </nav>
 
         <p className="mt-8 flex flex-wrap items-center justify-between gap-3 border-t-2 border-ink-line pt-5 text-sm text-cream-faint">
-          <span>Lesson {index + 1} of {allLessons.length}</span>
+          <span>Lesson {lesson.id}</span>
           {unit && (
             <Link href={`/curriculum#${unit.id}`} className="font-bold underline underline-offset-4 hover:text-brand-600">
               Back to {unit.num === '★' ? 'Extras' : `Unit ${unit.num}`}

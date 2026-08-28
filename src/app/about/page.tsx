@@ -66,7 +66,7 @@ export default function AboutPage() {
                 <Pill tone="brand">Built by a student</Pill>
               </li>
               <li>
-                <Pill tone="good">{stats.videos} videos so far</Pill>
+                <Pill tone="good">Real Arduino hardware</Pill>
               </li>
               <li>
                 <Pill>Live help every week</Pill>
@@ -158,9 +158,8 @@ export default function AboutPage() {
 
       {/* ---------------- the numbers ---------------- */}
       <Section className="pt-0 sm:pt-0">
-        <div className="card grid grid-cols-2 gap-8 p-8 sm:p-10 lg:grid-cols-4">
-          <StatCounter value={stats.lessons} label="Lessons" emoji="" />
-          <StatCounter value={stats.videos} label="Videos" emoji="" />
+        <div className="card grid grid-cols-1 gap-8 p-8 sm:grid-cols-3 sm:p-10">
+          <StatCounter value={stats.units} label="Units" emoji="" />
           <StatCounter value={stats.capstones} label="Big builds" emoji="" />
           <div className="text-center">
             <div className="font-display text-3xl font-extrabold leading-tight text-brand-600 sm:text-4xl">

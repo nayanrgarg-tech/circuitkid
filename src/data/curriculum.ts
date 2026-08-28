@@ -80,7 +80,7 @@ const rawUnits: (Omit<Unit, 'lessons'> & { lessons: Omit<Lesson, 'unitId'>[] })[
   },
   {
     id: "unit-5", num: "5", title: "Inventor Lab", emoji: "🚀",
-    tagline: "Build the big ones", blurb: "The five big builds. RC Car and Tic-Tac-Toe are ready to go; the other three are still being filmed.", accent: "pink",
+    tagline: "Build the big ones", blurb: "The five big builds. Everything from the earlier units, put to work on something you get to keep.", accent: "pink",
     lessons: [
       { slug: "5-1-welcome-to-the-inventor-lab", id: "5.1", title: "Welcome to the Inventor Lab", blurb: "How the big projects work, what you need for each, and which one to build first.", hasVideo: true, },
       { slug: "5a-1-rc-car-assembling-the-chassis", id: "5A.1", title: "RC Car: Assembling the Chassis", blurb: "Screws, wheels, motors, frame. Build the body before it can drive anywhere.", hasVideo: true, project: "A", },
