@@ -1,0 +1,76 @@
+name: Deploy to GitHub Pages
+
+# Builds the static export (./out) and publishes it to GitHub Pages.
+# Runs automatically on every push to main, or manually from the
+# Actions tab -> "Deploy to GitHub Pages" -> "Run workflow".
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Least privilege needed to read the repo and publish a Pages deployment.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Never run two deployments at once. cancel-in-progress is false on
+# purpose: let an in-flight deploy finish rather than leaving the live
+# site half-published.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build static export
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build (writes ./out)
+        run: npm run build
+        # ── Serving from a subfolder? ──────────────────────────────────
+        # Leave the env block below commented out when the site is served
+        # from the custom domain in public/CNAME (https://circuitkid.com),
+        # because every URL then starts at the root: /curriculum/, /kit/.
+        #
+        # Uncomment it ONLY if you serve the site as a GitHub "project
+        # page" at https://USER.github.io/REPO_NAME instead. In that case
+        # every URL is nested under /REPO_NAME, and Next needs to know so
+        # it can prefix links, images and its _next/ assets. Replace
+        # REPO_NAME with the actual repository name, keeping the leading
+        # slash and no trailing slash (e.g. /circuitkid).
+        #
+        # env:
+        #   NEXT_PUBLIC_BASE_PATH: /REPO_NAME
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload the built site as a Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './out'
+
+  deploy:
+    name: Publish to Pages
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4

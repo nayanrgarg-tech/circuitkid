@@ -1,0 +1,11 @@
+{
+  "//": "Managed by: npm run issue-login. Only SHA-256 hashes are stored, so this file is safe to commit.",
+  "students": [
+    {
+      "id": "demo",
+      "name": "Demo Student",
+      "hash": "6e2596b4dba47959486a0ebf47054d292f4c7852d1f97db92d74b5421794f3b7",
+      "issued": "2026-08-26"
+    }
+  ]
+}

@@ -1,0 +1,118 @@
+@import 'tailwindcss';
+
+/* ------------------------------------------------------------------ *
+ *  CircuitKid design tokens
+ *  Warm, high-contrast, single dark theme. Orange is the brand; each
+ *  unit gets its own accent so the curriculum reads like a map.
+ * ------------------------------------------------------------------ */
+@theme {
+  --color-ink-900: #120c09;
+  --color-ink-800: #17100c;
+  --color-ink-700: #1e1611;
+  --color-ink-600: #291d16;
+  --color-ink-500: #3a291f;
+  --color-ink-400: #554032;
+
+  --color-cream: #fff6ee;
+  --color-cream-dim: #e8d5c5;
+  --color-cream-faint: #b39c8b;
+
+  --color-brand-300: #ffb185;
+  --color-brand-400: #ff9257;
+  --color-brand-500: #ff7a33;
+  --color-brand-600: #e05e1c;
+  --color-brand-700: #a4471f;
+  /* Deep warm brown used only for large drop shadows. */
+  --color-brand-900: #3d1a0c;
+
+  --color-lime: #a3e635;
+  --color-cyan: #38d9f0;
+  --color-violet: #a78bfa;
+  --color-amber: #fbbf24;
+  --color-pink: #f472b6;
+  --color-orange: #ff7a33;
+  --color-slate: #94a3b8;
+
+  --font-display: var(--font-baloo), 'Trebuchet MS', system-ui, sans-serif;
+  --font-sans: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
+
+  --radius-card: 1.25rem;
+
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-spark: spark 2.4s ease-in-out infinite;
+  --animate-rise: rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-14px) rotate(3deg); }
+}
+@keyframes spark {
+  0%, 100% { opacity: 0.35; transform: scale(0.9); }
+  50% { opacity: 1; transform: scale(1.1); }
+}
+@keyframes rise {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ------------------------------------------------------------------ */
+
+html {
+  scroll-behavior: smooth;
+  background: var(--color-ink-900);
+}
+
+body {
+  background:
+    radial-gradient(900px 500px at 12% -8%, rgba(255, 122, 51, 0.16), transparent 60%),
+    radial-gradient(700px 420px at 92% 4%, rgba(167, 139, 250, 0.12), transparent 62%),
+    var(--color-ink-900);
+  color: var(--color-cream);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4, .font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.015em;
+}
+
+::selection {
+  background: var(--color-brand-500);
+  color: var(--color-ink-900);
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-brand-400);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* Warm, unobtrusive scrollbar so long lesson lists still feel on-brand. */
+* {
+  scrollbar-color: var(--color-ink-500) transparent;
+  scrollbar-width: thin;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* ---- small composable utilities used across pages ---------------- */
+@utility card {
+  border-radius: var(--radius-card);
+  border: 1px solid --alpha(var(--color-cream) / 10%);
+  background: --alpha(var(--color-ink-700) / 80%);
+}
+
+@utility grid-dots {
+  background-image: radial-gradient(--alpha(var(--color-cream) / 8%) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
