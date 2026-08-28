@@ -7,17 +7,23 @@ import type { ReactNode } from 'react';
 
 /* ---------------- accents ---------------- */
 
+/**
+ * One candy colour per unit, so the curriculum reads like a map.
+ * `text` is the darkened variant — the plain pop is a fill colour and
+ * goes muddy under words on paper. `ring` is always ink: borders in this
+ * theme do not take an accent.
+ */
 export const ACCENT: Record<
   string,
   { text: string; bg: string; ring: string; dot: string; glow: string }
 > = {
-  orange: { text: 'text-brand-400', bg: 'bg-brand-500/12', ring: 'ring-brand-500/30', dot: 'bg-brand-500', glow: 'shadow-brand-500/20' },
-  amber: { text: 'text-amber', bg: 'bg-amber/12', ring: 'ring-amber/30', dot: 'bg-amber', glow: 'shadow-amber/20' },
-  cyan: { text: 'text-cyan', bg: 'bg-cyan/12', ring: 'ring-cyan/30', dot: 'bg-cyan', glow: 'shadow-cyan/20' },
-  lime: { text: 'text-lime', bg: 'bg-lime/12', ring: 'ring-lime/30', dot: 'bg-lime', glow: 'shadow-lime/20' },
-  violet: { text: 'text-violet', bg: 'bg-violet/12', ring: 'ring-violet/30', dot: 'bg-violet', glow: 'shadow-violet/20' },
-  pink: { text: 'text-pink', bg: 'bg-pink/12', ring: 'ring-pink/30', dot: 'bg-pink', glow: 'shadow-pink/20' },
-  slate: { text: 'text-slate', bg: 'bg-slate/12', ring: 'ring-slate/30', dot: 'bg-slate', glow: 'shadow-slate/20' },
+  orange: { text: 'text-brand-600', bg: 'bg-brand-500/15', ring: 'ring-ink-line', dot: 'bg-brand-500', glow: 'shadow-brand-600/25' },
+  amber: { text: 'text-amber-deep', bg: 'bg-amber/25', ring: 'ring-ink-line', dot: 'bg-amber', glow: 'shadow-amber-deep/25' },
+  cyan: { text: 'text-cyan-deep', bg: 'bg-cyan/15', ring: 'ring-ink-line', dot: 'bg-cyan', glow: 'shadow-cyan-deep/25' },
+  lime: { text: 'text-lime-deep', bg: 'bg-lime/18', ring: 'ring-ink-line', dot: 'bg-lime', glow: 'shadow-lime-deep/25' },
+  violet: { text: 'text-violet-deep', bg: 'bg-violet/15', ring: 'ring-ink-line', dot: 'bg-violet', glow: 'shadow-violet-deep/25' },
+  pink: { text: 'text-pink-deep', bg: 'bg-pink/15', ring: 'ring-ink-line', dot: 'bg-pink', glow: 'shadow-pink-deep/25' },
+  slate: { text: 'text-slate-deep', bg: 'bg-slate/18', ring: 'ring-ink-line', dot: 'bg-slate', glow: 'shadow-slate-deep/25' },
 };
 
 export const accent = (key: string) => ACCENT[key] ?? ACCENT.orange;
@@ -50,7 +56,7 @@ export function Section({
   );
 }
 
-/** Emoji-accented section header. */
+/** Section header. The `emoji` slot is optional and usually stays empty. */
 export function SectionHead({
   emoji,
   eyebrow,
@@ -68,11 +74,11 @@ export function SectionHead({
   return (
     <header className={`mb-10 ${centered ? 'text-center mx-auto max-w-2xl' : 'max-w-3xl'}`}>
       {eyebrow && (
-        <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-brand-400">
+        <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-brand-600">
           {eyebrow}
         </p>
       )}
-      <h2 className="text-3xl font-extrabold leading-tight sm:text-4xl">
+      <h2 className="text-3xl font-extrabold leading-tight text-cream sm:text-4xl">
         {emoji && <span className="mr-2.5 align-middle">{emoji}</span>}
         {title}
       </h2>
@@ -93,14 +99,14 @@ export function Pill({
   className?: string;
 }) {
   const tones = {
-    neutral: 'bg-cream/8 text-cream-dim ring-cream/12',
-    brand: 'bg-brand-500/15 text-brand-300 ring-brand-500/30',
-    good: 'bg-lime/15 text-lime ring-lime/30',
-    muted: 'bg-cream/5 text-cream-faint ring-cream/8',
+    neutral: 'bg-ink-700 text-cream',
+    brand: 'bg-brand-400 text-cream',
+    good: 'bg-lime/35 text-cream',
+    muted: 'bg-ink-500 text-cream-dim',
   }[tone];
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ${tones} ${className}`}
+      className={`inline-flex items-center gap-1.5 rounded-full border-2 border-ink-line px-2.5 py-1 text-xs font-semibold hard-shadow-xs ${tones} ${className}`}
     >
       {children}
     </span>
@@ -131,13 +137,14 @@ export function Btn({
   disabled,
 }: BtnProps) {
   const base =
-    'inline-flex items-center justify-center gap-2 rounded-full font-semibold transition-all duration-200 disabled:opacity-50 disabled:pointer-events-none';
+    'inline-flex items-center justify-center gap-2 rounded-full font-semibold transition-all duration-200 ease-bounce disabled:opacity-50 disabled:pointer-events-none';
   const sizes = { md: 'px-5 py-2.5 text-sm', lg: 'px-7 py-3.5 text-base' }[size];
+  // Ink border, hard shadow, and the shadow collapses under the press.
+  const solid =
+    'border-[3px] border-ink-line hard-shadow hover:-translate-y-1 hover:hard-shadow-lg active:translate-y-0.5 active:hard-shadow-xs';
   const variants = {
-    primary:
-      'bg-brand-500 text-ink-900 shadow-lg shadow-brand-600/25 hover:bg-brand-400 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-brand-500/30',
-    outline:
-      'ring-2 ring-brand-500/50 text-brand-300 hover:bg-brand-500/10 hover:ring-brand-400 hover:-translate-y-0.5',
+    primary: `${solid} bg-brand-500 text-cream hover:bg-brand-400`,
+    outline: `${solid} bg-ink-700 text-cream hover:bg-brand-500/12`,
     ghost: 'text-cream-dim hover:text-cream hover:bg-cream/8',
   }[variant];
   const cls = `${base} ${sizes} ${variants} ${className}`;
@@ -167,7 +174,7 @@ export function Btn({
   );
 }
 
-/** Hover-lifting card used across every grid on the site. */
+/** The polaroid: 3px ink border, hard shadow, lifts and straightens on hover. */
 export function Card({
   children,
   className = '',
@@ -177,11 +184,5 @@ export function Card({
   className?: string;
   as?: 'div' | 'li' | 'article';
 }) {
-  return (
-    <As
-      className={`group card p-6 transition-all duration-300 hover:-translate-y-1.5 hover:border-brand-500/40 hover:bg-ink-600/80 hover:shadow-2xl hover:shadow-brand-900/40 ${className}`}
-    >
-      {children}
-    </As>
-  );
+  return <As className={`group polaroid p-6 ${className}`}>{children}</As>;
 }

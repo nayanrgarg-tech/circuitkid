@@ -12,43 +12,60 @@ export const metadata: Metadata = {
   description: site.description,
 };
 
-/* Decorative hero confetti — desktop only, purely cosmetic. */
-const FLOATERS = [
-  { emoji: '🤖', pos: 'right-[5%] top-[16%]', size: 'text-6xl', delay: '0s' },
-  { emoji: '⚡', pos: 'right-[26%] top-[28%]', size: 'text-4xl', delay: '1.1s' },
-  { emoji: '💡', pos: 'right-[13%] top-[56%]', size: 'text-5xl', delay: '2.2s' },
-  { emoji: '🔧', pos: 'right-[31%] top-[72%]', size: 'text-4xl', delay: '3.1s' },
+/** Two real photos, hung in the hero like pictures on a fridge. */
+const HERO_SHOTS = [
+  {
+    src: '/images/kit/kit-lcd-build.jpg',
+    alt: "An Arduino UNO R4 wired to a breadboard and an LCD reading 'I heart Arduino'",
+    caption: 'The screen build, straight out of the box',
+    tilt: 'rotate-[-2.5deg]',
+  },
+  {
+    src: '/images/kit/kit-robot-car.jpg',
+    alt: 'The two-wheel-drive robot car chassis with its motors and wheels',
+    caption: 'The car, before it learns to dodge',
+    tilt: 'rotate-[2deg]',
+  },
 ] as const;
 
 const STEPS = [
   {
-    emoji: '📺',
     title: 'Watch it',
+    tone: 'bg-cyan',
     body:
       'Short videos, plain English. Every new word gets explained the first time it shows up, not three lessons later.',
   },
   {
-    emoji: '🔌',
     title: 'Wire it up',
+    tone: 'bg-amber',
     body:
-      'Pause and build the circuit on your breadboard. Every wire is on screen, pin by pin. Rewind as often as you need to.',
+      'Pause and build the circuit on your breadboard. Every wire is on screen, pin by pin. Rewind as often as you need.',
   },
   {
-    emoji: '💻',
     title: 'Run the code',
+    tone: 'bg-lime',
     body:
       'Copy the sketch out of the workbook and hit upload. Then change a number and see what breaks. That part is the whole point.',
   },
 ] as const;
+
+/** Candy tile behind each Inventor Lab project letter. */
+const PROJECT_TONE: Record<string, string> = {
+  A: 'bg-pink',
+  B: 'bg-cyan',
+  C: 'bg-violet',
+  D: 'bg-amber',
+  E: 'bg-lime',
+};
 
 /** Big-number tile that visually matches <StatCounter/> but never animates. */
 function AgesTile() {
   const range = site.ages.replace('Ages ', '');
   return (
     <div className="text-center">
-      <div className="mb-1.5 text-2xl" aria-hidden>
-        🎂
-      </div>
+      {/* StatCounter still renders an (empty) icon slot above its number.
+          This spacer keeps all four numbers sitting on the same line. */}
+      <div className="mb-1.5 text-2xl" aria-hidden />
       <div className="font-display text-4xl font-extrabold text-brand-400 sm:text-5xl">{range}</div>
       <div className="mt-1.5 text-sm font-semibold uppercase tracking-wider text-cream-faint">
         Ages
@@ -64,39 +81,19 @@ export default function HomePage() {
     <>
       {/* ------------------------------------------------ 1. HERO */}
       <section className="relative overflow-hidden">
-        <div aria-hidden className="pointer-events-none absolute inset-0 grid-dots opacity-70" />
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -top-56 left-1/2 h-[640px] w-[1000px] -translate-x-1/2 rounded-full bg-brand-500/20 blur-[140px]"
-        />
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-ink-900 to-transparent"
-        />
+        <div aria-hidden className="pointer-events-none absolute inset-0 grid-dots opacity-60" />
 
-        <div aria-hidden className="pointer-events-none absolute inset-0 hidden lg:block">
-          {FLOATERS.map((f) => (
-            <span
-              key={f.emoji}
-              style={{ animationDelay: f.delay }}
-              className={`absolute ${f.pos} ${f.size} animate-float opacity-80 drop-shadow-2xl`}
-            >
-              {f.emoji}
-            </span>
-          ))}
-        </div>
-
-        <Container className="relative flex min-h-[80vh] flex-col justify-center py-20 sm:py-28 lg:min-h-[85vh]">
+        <Container className="relative grid min-h-[78vh] items-center gap-14 py-20 sm:py-28 lg:min-h-[84vh] lg:grid-cols-[1.08fr_0.92fr]">
           <div className="max-w-3xl">
             <div className="animate-rise">
-              <Pill tone="brand">⚡ {site.ages} · No experience needed</Pill>
+              <Pill tone="brand">{site.ages} · No experience needed</Pill>
             </div>
 
             <h1
               className="mt-6 animate-rise font-display text-6xl font-extrabold leading-[0.92] sm:text-7xl lg:text-8xl"
               style={{ animationDelay: '0.08s' }}
             >
-              Circuit<span className="text-brand-400">Kid</span>
+              Circuit<span className="text-brand-500">Kid</span>
             </h1>
 
             <p
@@ -110,11 +107,11 @@ export default function HomePage() {
               className="mt-6 max-w-2xl animate-rise text-lg leading-relaxed text-cream-dim sm:text-xl"
               style={{ animationDelay: '0.2s' }}
             >
-              A video course for kids who want to build robots. You get a real Arduino kit and you
-              start building with it right away. First a blinking light, which sounds small until it
-              is your light and you are the one who made it blink. By the end you have a car that
-              drives itself around your living room. No coding experience needed. Nobody has any at
-              the start.
+              A video course for kids who want to build robots. A real Arduino kit shows up at your
+              door and you start building with it the same day. First a blinking light. That sounds
+              small until it is your light, and you are the one who made it blink. By the end you
+              have a car that drives itself around the living room. Nobody starts this course
+              knowing how to code.
             </p>
 
             <div
@@ -133,9 +130,34 @@ export default function HomePage() {
               className="mt-6 animate-rise text-sm font-semibold text-cream-faint"
               style={{ animationDelay: '0.32s' }}
             >
-              🎥 Live help every week. Bring whatever is broken and we fix it together.
+              Live help every week. Bring whatever is broken and we fix it together.
             </p>
           </div>
+
+          <ul
+            className="hidden animate-rise flex-col items-center lg:flex"
+            style={{ animationDelay: '0.24s' }}
+          >
+            {HERO_SHOTS.map((shot, i) => (
+              <li
+                key={shot.src}
+                className={`polaroid tape relative w-full max-w-[320px] p-3 pb-5 transition-transform duration-300 hover:rotate-0 ${shot.tilt} ${
+                  i === 1 ? 'mt-4 ml-16' : ''
+                }`}
+              >
+                <Image
+                  src={asset(shot.src)}
+                  alt={shot.alt}
+                  width={600}
+                  height={400}
+                  className="h-44 w-full border-2 border-ink-line object-cover"
+                />
+                <p className="mt-3 text-center font-display text-sm font-semibold text-cream-dim">
+                  {shot.caption}
+                </p>
+              </li>
+            ))}
+          </ul>
         </Container>
       </section>
 
@@ -143,53 +165,50 @@ export default function HomePage() {
       <section className="pb-16 sm:pb-24">
         <Container>
           <div className="card grid grid-cols-2 gap-8 p-8 sm:gap-10 sm:p-10 lg:grid-cols-4">
-            <StatCounter value={stats.lessons} label="Lessons" emoji="📚" />
-            <StatCounter value={stats.videos} label="Videos ready" emoji="🎬" />
-            <StatCounter value={stats.capstones} label="Big builds" emoji="🚀" />
+            <StatCounter value={stats.lessons} label="Lessons" emoji="" />
+            <StatCounter value={stats.videos} label="Videos ready" emoji="" />
+            <StatCounter value={stats.capstones} label="Big builds" emoji="" />
             <AgesTile />
           </div>
         </Container>
       </section>
 
       {/* -------------------------------------- 3. WHAT YOU'LL BUILD */}
-      <Section className="relative">
+      <Section className="border-y-[3px] border-ink-line bg-ink-800">
         <SectionHead
-          emoji="🛠️"
           eyebrow="Inventor Lab"
           title="Five builds you get to keep"
-          sub="The last unit is the Inventor Lab. Each project runs over a handful of lessons and uses most of what you picked up on the way there. Pick one. Or be stubborn and do all five."
+          sub="The last unit is the Inventor Lab. Each project runs over a handful of lessons and uses most of what you picked up getting there. Pick one. Or be stubborn and do all five."
         />
 
         <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {capstones.map((c) => {
             const filming = c.lessonCount === 0;
             return (
-              <Card
-                as="li"
-                key={c.letter}
-                className={`relative flex flex-col ${filming ? 'opacity-60' : ''}`}
-              >
+              <Card as="li" key={c.letter} className="relative flex flex-col">
                 <div className="flex items-start justify-between gap-3">
-                  <span className="text-4xl" aria-hidden>
-                    {c.emoji}
+                  <span
+                    className={`grid h-12 w-12 shrink-0 place-items-center rounded-xl border-[3px] border-ink-line font-display text-2xl font-extrabold text-cream shadow-[3px_3px_0_var(--color-ink-line)] ${
+                      PROJECT_TONE[c.letter] ?? 'bg-amber'
+                    }`}
+                  >
+                    {c.letter}
                   </span>
-                  <Pill tone={filming ? 'muted' : 'brand'}>Project {c.letter}</Pill>
+                  <Pill tone={filming ? 'muted' : 'brand'}>
+                    {filming ? 'Still filming' : `${c.lessonCount} lessons`}
+                  </Pill>
                 </div>
 
                 <h3 className="mt-4 text-xl font-bold">
                   <Link
                     href="/curriculum#unit-5"
-                    className="transition-colors after:absolute after:inset-0 after:content-[''] group-hover:text-brand-300"
+                    className="transition-colors after:absolute after:inset-0 after:content-[''] group-hover:text-brand-600"
                   >
                     {c.name}
                   </Link>
                 </h3>
 
                 <p className="mt-2 text-sm leading-relaxed text-cream-dim">{c.blurb}</p>
-
-                <p className="mt-3 text-xs font-semibold uppercase tracking-wider text-cream-faint">
-                  {filming ? 'Still filming' : `${c.lessonCount} lessons`}
-                </p>
 
                 <ul className="mt-4 flex flex-wrap gap-1.5 pt-1">
                   {c.skills.map((s) => (
@@ -209,23 +228,19 @@ export default function HomePage() {
         <div aria-hidden className="pointer-events-none absolute inset-0 grid-dots opacity-40" />
         <div className="relative">
           <SectionHead
-            emoji="🔁"
             eyebrow="How it works"
             title="Every lesson runs the same way"
-            sub="Three steps, in the same order, every time. Learn the loop once and the rest of the course is that loop again with better parts in it."
+            sub="Three steps, same order, every time. Learn the loop once and the rest of the course is that loop again with better parts in it."
           />
 
           <ol className="grid gap-6 md:grid-cols-3">
             {STEPS.map((s, i) => (
               <Card as="li" key={s.title} className="flex flex-col">
-                <div className="flex items-center gap-4">
-                  <span className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-brand-500/15 font-display text-xl font-extrabold text-brand-300 ring-1 ring-brand-500/30">
-                    {i + 1}
-                  </span>
-                  <span className="text-3xl" aria-hidden>
-                    {s.emoji}
-                  </span>
-                </div>
+                <span
+                  className={`grid h-12 w-12 shrink-0 place-items-center rounded-xl border-[3px] border-ink-line font-display text-xl font-extrabold text-cream shadow-[3px_3px_0_var(--color-ink-line)] ${s.tone}`}
+                >
+                  {i + 1}
+                </span>
                 <h3 className="mt-5 text-xl font-bold">{s.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-cream-dim">{s.body}</p>
               </Card>
@@ -235,22 +250,21 @@ export default function HomePage() {
       </Section>
 
       {/* -------------------------------------- 5. CURRICULUM TEASER */}
-      <Section>
+      <Section className="border-y-[3px] border-ink-line bg-ink-800">
         <SectionHead
-          emoji="🗺️"
           eyebrow="The map"
           title={`${stats.units} units, in order`}
-          sub="Nothing gets skipped. Each unit only assumes what the one before it already taught you, so if you start at Unit 0 you never walk into a wall."
+          sub="Nothing gets skipped. Each unit only assumes what the one before it taught you, so if you start at Unit 0 you never walk into a wall."
         />
 
         <ul className="grid gap-5 md:grid-cols-2">
           {courseUnits.map((u) => {
             const a = accent(u.accent);
-            const filming = u.lessons.filter((l) => !l.video).length;
+            const filming = u.lessons.filter((l) => !l.hasVideo).length;
             return (
               <Card as="li" key={u.id} className="relative flex items-start gap-5">
                 <span
-                  className={`grid h-14 w-14 shrink-0 place-items-center rounded-2xl text-2xl ring-1 ${a.bg} ${a.ring}`}
+                  className={`grid h-14 w-14 shrink-0 place-items-center rounded-xl border-[3px] border-ink-line text-2xl shadow-[3px_3px_0_var(--color-ink-line)] ${a.bg}`}
                   aria-hidden
                 >
                   {u.emoji}
@@ -258,8 +272,8 @@ export default function HomePage() {
 
                 <div className="min-w-0">
                   <div className="flex items-center gap-2">
-                    <span className={`h-2 w-2 rounded-full ${a.dot}`} aria-hidden />
-                    <span className={`text-xs font-bold uppercase tracking-[0.18em] ${a.text}`}>
+                    <span className={`h-2.5 w-2.5 rounded-full ${a.dot}`} aria-hidden />
+                    <span className="text-xs font-bold uppercase tracking-[0.18em] text-cream-dim">
                       Unit {u.num}
                     </span>
                   </div>
@@ -267,7 +281,7 @@ export default function HomePage() {
                   <h3 className="mt-1.5 text-lg font-bold leading-snug">
                     <Link
                       href={`/curriculum#${u.id}`}
-                      className="transition-colors after:absolute after:inset-0 after:content-[''] group-hover:text-brand-300"
+                      className="transition-colors after:absolute after:inset-0 after:content-[''] group-hover:text-brand-600"
                     >
                       {u.title}
                     </Link>
@@ -295,50 +309,46 @@ export default function HomePage() {
       {/* ------------------------------------------------ 6. SHOWCASE */}
       <Section>
         <SectionHead
-          emoji="✨"
           eyebrow="Student builds"
           title="Made out of the same box"
           sub="No extra parts ordered, no 3D printer. Everything down here came out of the kit that shows up at your door."
         />
 
-        <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {showcase.map((p) => (
-            <Card as="li" key={p.src} className="overflow-hidden">
+        <ul className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
+          {showcase.map((p, i) => (
+            <li
+              key={p.src}
+              className={`polaroid tape relative p-3 pb-6 transition-transform duration-300 hover:rotate-0 ${
+                ['rotate-[-2.5deg]', 'rotate-[2deg]', 'rotate-[-1.5deg]'][i % 3]
+              }`}
+            >
               <Image
                 src={asset(p.src)}
                 alt={p.alt}
                 width={600}
                 height={400}
-                className="h-48 w-full rounded-xl object-cover ring-1 ring-cream/10"
+                className="h-48 w-full border-2 border-ink-line object-cover"
               />
-              <h3 className="mt-5 text-lg font-bold">{p.name}</h3>
+              <h3 className="mt-4 font-display text-lg font-bold">{p.name}</h3>
               <p className="mt-2 text-sm leading-relaxed text-cream-dim">{p.blurb}</p>
-            </Card>
+            </li>
           ))}
         </ul>
       </Section>
 
       {/* ----------------------------------------------- 7. FINAL CTA */}
       <Section>
-        <div className="card relative overflow-hidden p-10 text-center sm:p-16">
+        <div className="relative overflow-hidden rounded-[30px] border-[3px] border-ink-line bg-ink-700 p-10 text-center shadow-[10px_10px_0_var(--color-ink-line)] sm:p-16">
           <div aria-hidden className="pointer-events-none absolute inset-0 grid-dots opacity-50" />
-          <div
-            aria-hidden
-            className="pointer-events-none absolute -bottom-40 left-1/2 h-[420px] w-[720px] -translate-x-1/2 rounded-full bg-brand-500/20 blur-[120px]"
-          />
 
           <div className="relative mx-auto max-w-2xl">
-            <span className="text-5xl animate-spark inline-block" aria-hidden>
-              🤖
-            </span>
-
-            <h2 className="mt-6 font-display text-4xl font-extrabold leading-tight sm:text-5xl">
+            <h2 className="font-display text-4xl font-extrabold leading-tight sm:text-5xl">
               Go build something that moves
             </h2>
 
             <p className="mt-5 text-lg leading-relaxed text-cream-dim">
               Get the kit, open Unit 0, and start. Something on your desk will be blinking before
-              dinner. The car takes a little longer.
+              dinner. The car takes longer.
             </p>
 
             <div className="mt-9 flex flex-col items-center justify-center gap-3 sm:flex-row">
@@ -354,7 +364,7 @@ export default function HomePage() {
               Questions first? Email{' '}
               <a
                 href={`mailto:${site.email}`}
-                className="font-semibold text-cream-dim underline decoration-brand-500/40 underline-offset-4 transition-colors hover:text-brand-300"
+                className="font-semibold text-cream-dim underline decoration-brand-500/50 underline-offset-4 transition-colors hover:text-brand-600"
               >
                 {site.email}
               </a>

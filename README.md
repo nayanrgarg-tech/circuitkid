@@ -29,89 +29,60 @@ npm run start       # serves the already-built ./out folder, exactly as visitors
 
 ---
 
-## 2. Adding a lesson video
+## 2. Adding and editing lessons
 
-This is the task you will do most often. All lesson content lives in one file: **`src/data/curriculum.ts`**.
+**Everything lives in one file: `content/course.json`.** Edit it, then run:
 
-1. Open `src/data/curriculum.ts`.
-2. Find the lesson by its title (use your editor's find, `Cmd+F`).
-3. Set its `video` field.
-
-Every lesson looks like this:
-
-```ts
-{
-  slug: "2-1-led-blink",
-  id: "2.1",
-  title: "LED Blink",
-  blurb: "The classic first program. Make a light blink…",
-  video: "https://www.youtube.com/embed/mWavIuNxlNs",   // <-- this line
-  materials: ["Arduino UNO R4", "Breadboard", "LED", "220 ohm resistor"],
-  learn: ["setup() and loop()", "digitalWrite() and delay()"],
-  resources: [
-    { kind: "code",   label: "Code",   url: "https://docs.google.com/presentation/d/…/edit",
-      embed: "https://docs.google.com/presentation/d/…/embed?start=false&loop=false&rm=minimal" },
-  ],
-},
+```bash
+npm run seal
 ```
 
-Most lessons already have a real video — they were imported from the exported
-Google Site, so you should rarely need to add one from scratch.
+Or skip the JSON entirely and let it ask you questions:
 
-The `video` field wants a YouTube **embed** URL:
-
-```
-https://www.youtube.com/embed/VIDEO_ID
+```bash
+npm run add-lesson
 ```
 
-### Finding the VIDEO_ID
+That prompts for the unit, title, description, YouTube link and any Slides/Docs
+links, works out the embed URLs for you, adds the lesson and seals it.
 
-All three kinds of YouTube link contain the same ID. Grab the part shown in bold below:
+### Why there are two files
 
-| Where you copied it from | Looks like                                     | VIDEO_ID      |
-| ------------------------ | ---------------------------------------------- | ------------- |
-| Address bar (watch page) | `https://youtube.com/watch?v=`**`dQw4w9WgXcQ`**| `dQw4w9WgXcQ` |
-| The **Share** button     | `https://youtu.be/`**`dQw4w9WgXcQ`**           | `dQw4w9WgXcQ` |
-| A Short                  | `https://youtube.com/shorts/`**`dQw4w9WgXcQ`** | `dQw4w9WgXcQ` |
+`content/course.json` is **gitignored**, because the repo is public and your lesson
+videos are unlisted — the URL is the secret. `npm run seal` splits it in two:
 
-On a watch link, stop at the `&` if there is one — `?v=dQw4w9WgXcQ&t=42s` still has the ID `dQw4w9WgXcQ`.
+| File | Contains | Committed? |
+| --- | --- | --- |
+| `src/data/curriculum.ts` | unit and lesson titles, descriptions | yes, public |
+| `public/course.enc.json` | video URLs, slides, code, wiring, materials | yes, encrypted |
 
-### When a lesson has no video
+So the outline is readable by anyone (good for Google), and the actual course is not.
 
-Leaving `video: ""` is fine. The lesson page shows a "not filmed yet" card instead of an
-empty hole. Two lessons deliberately have no video — the Button Challenge and the Inventor
-Challenge are slide-based challenges, and their slides are embedded instead.
+> **Never edit `src/data/curriculum.ts` by hand.** `npm run seal` overwrites it.
+
+### Lost content/course.json?
+
+```bash
+npm run unseal
+```
+
+rebuilds it from the encrypted file. This only needs `.course-key`, so **back that
+file up** — it is the one thing that cannot be recovered.
+
+### Links you can paste
+
+Any YouTube form works — `youtube.com/watch?v=ID`, `youtu.be/ID`, `youtube.com/shorts/ID`.
+For Google, paste the normal share link; `add-lesson` converts it:
+
+| Type | Becomes |
+| --- | --- |
+| Slides | `/embed?start=false&loop=false&rm=minimal` |
+| Docs / Sheets | `/preview` |
+
+> Anything embedded must be shared **"Anyone with the link — Viewer"** in Google, or
+> students see a sign-in box instead of your content.
 
 ---
-
-### Slides, code and wiring (the `resources` list)
-
-Each resource is:
-
-```ts
-{ kind: "slides" | "code" | "wiring" | "form" | "download",
-  label: "Code",
-  url:   "…the normal Google link…",
-  embed: "…the iframe link, or null…" }
-```
-
-`url` is where the "Open in Google ↗" button goes. `embed` is what gets shown **inline**
-on the lesson page. Set `embed: null` and it renders as a plain link instead.
-
-Building the `embed` link:
-
-| Type            | Take the normal link and…                                          |
-| --------------- | ------------------------------------------------------------------ |
-| Google Slides   | replace `/edit?…` with `/embed?start=false&loop=false&rm=minimal`   |
-| Google Docs     | replace `/edit?…` with `/preview`                                   |
-| Google Sheets   | replace `/edit?…` with `/preview`                                   |
-
-To open a deck on a particular slide, append `&slide=id.gXXXXXXXX` — that id is the
-`slide=` value already sitting in the normal link.
-
-> **The one thing that will bite you:** anything you embed has to be shared
-> **"Anyone with the link — Viewer"** in Google. If it is restricted, students see a Google
-> sign-in box inside the frame instead of your content. Check it in a private window.
 
 ## 3. Issuing student logins
 
@@ -169,25 +140,26 @@ To move progress between devices, the dashboard produces a **transfer code**: a 
 
 ---
 
-## 5. Security: what the login does and does not do
+## 5. What the login actually protects
 
-Be honest with yourself about this, because it is easy to assume more protection than exists.
+The lesson content is **encrypted**, not just hidden.
 
-A static site works by sending **all** of its HTML and JavaScript to **every** visitor. There is no server deciding who may see what. So the access code:
+- One random course key encrypts every lesson's video, slides, code, wiring and
+  materials into `public/course.enc.json`.
+- Each access code carries its own wrapped copy of that key. Signing in stretches
+  the code with PBKDF2 (250,000 rounds), unwraps the key, and decrypts the course
+  in the browser.
+- Without a valid code the content is ciphertext. It is not in the page HTML and
+  not in the JavaScript bundle.
+- Revoking a login deletes its wrapped key, so that code stops working. Everyone
+  else's keeps working — no re-encrypting.
 
-**What it does**
+What is deliberately **public**: unit and lesson titles and their one-line
+descriptions. That is the shop window, and it is what search engines index.
 
-- Gives each student an identity and their own progress tracking.
-- Keeps the lesson area tidy and personal — you arrive, type your code, and see your dashboard.
-- Stops casual wandering: someone without a code has no obvious way in.
-
-**What it does not do**
-
-- It does **not** cryptographically protect lesson content. Someone technical who wants to read lesson text without a code can, by looking at the files the site already sent them.
-- It is **not** a password. Codes are not secret credentials tied to an email; they are shareable strings.
-- The roster (names + hashes) ships with the site, so student names are technically discoverable by anyone who digs.
-
-For a robotics course this is the right trade-off — the content is meant to be taught, not guarded, and the cost of the alternative (a real backend) is not worth it yet. But the rule is firm: **do not put anything genuinely private behind this gate.** No addresses, no payment details, no medical or school records, no unpublished material you would be upset to see leak.
+One honest caveat: a signed-in student can read the decrypted URLs in their own
+browser and pass them on. No web design prevents that. What this stops is the
+course being readable by anyone who simply finds the site.
 
 ---
 

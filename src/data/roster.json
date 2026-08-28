@@ -2,10 +2,15 @@
   "//": "Managed by: npm run issue-login. Only SHA-256 hashes are stored, so this file is safe to commit.",
   "students": [
     {
-      "id": "demo",
+      "id": "demo-student",
       "name": "Demo Student",
-      "hash": "6e2596b4dba47959486a0ebf47054d292f4c7852d1f97db92d74b5421794f3b7",
-      "issued": "2026-08-26"
+      "hash": "6c82982df9ae38189c6490be28bf5d45d9c3b080ae2d1bddd8c48f523b4943c5",
+      "salt": "Br37XoIJuk/uvg8A92dCiA==",
+      "wrap": {
+        "iv": "7DlkJtSw4B2p3Rwf",
+        "data": "sLWxohQ4bARDiTpYudFCMtRM/3uh96OyJ45MHjhHO9H0McIrVZHqFk9LonB4h/XT"
+      },
+      "issued": "2026-08-28"
     }
   ]
 }

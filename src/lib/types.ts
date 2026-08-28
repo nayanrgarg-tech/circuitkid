@@ -3,39 +3,42 @@ export type ResourceKind = 'slides' | 'code' | 'wiring' | 'form' | 'download';
 export type Resource = {
   kind: ResourceKind;
   label: string;
-  /** Where the "open it properly" link goes. */
   url: string;
-  /**
-   * iframe src that shows this thing inline on the lesson page.
-   * null = link only. Anything embedded must be shared publicly, or
-   * students just see a Google sign-in box.
-   */
+  /** iframe src shown inline on the lesson page, or null for a plain link. */
   embed: string | null;
 };
 
+/**
+ * The PUBLIC half of a lesson — its place in the course.
+ * Safe to ship to anyone; it's what the curriculum page shows to visitors.
+ */
 export type Lesson = {
-  /** /lessons/<slug> */
   slug: string;
-  /** What it's called in the hub: "2.10", "5B.4", "★" */
+  /** "2.10", "5B.4", "★" */
   id: string;
   title: string;
-  /** Filled in from the unit that owns it. */
   unitId: string;
   blurb: string;
-  /** YouTube embed URL. '' shows the "not filmed yet" card. */
-  video: string;
-  /** Side quests — fun, but they don't count toward progress. */
+  /** Lets the outline say "still filming" without revealing the video. */
+  hasVideo: boolean;
   optional?: boolean;
-  /** Inventor Lab letter (A–E) for lessons that belong to a project. */
+  /** Inventor Lab letter (A–E). */
   project?: string;
+};
+
+/**
+ * The PRIVATE half — encrypted in public/course.enc.json and decrypted in the
+ * browser after a student signs in. Never present in the JS bundle.
+ */
+export type LessonContent = {
+  video: string;
+  resources: Resource[];
   materials: string[];
   learn: string[];
-  resources: Resource[];
 };
 
 export type Unit = {
   id: string;
-  /** "0"–"5", or "★" for Extras */
   num: string;
   title: string;
   emoji: string;
@@ -48,10 +51,8 @@ export type Unit = {
 export type Capstone = {
   letter: string;
   name: string;
-  emoji: string;
   blurb: string;
   skills: string[];
-  /** 0 means this one isn't filmed yet. */
+  /** 0 means this project isn't filmed yet. */
   lessonCount: number;
-  workbook: string;
 };
