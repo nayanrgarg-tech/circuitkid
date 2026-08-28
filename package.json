@@ -13,7 +13,8 @@
     "logins": "node scripts/issue-login.mjs --list",
     "seal": "node scripts/seal.mjs",
     "unseal": "node scripts/unseal.mjs",
-    "add-lesson": "node scripts/add-lesson.mjs"
+    "add-lesson": "node scripts/add-lesson.mjs",
+    "publish": "node scripts/publish.mjs"
   },
   "dependencies": {
     "next": "15.1.6",

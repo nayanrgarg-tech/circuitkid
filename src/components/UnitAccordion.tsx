@@ -13,6 +13,7 @@ import Link from 'next/link';
 import VideoEmbed from '@/components/VideoEmbed';
 import { DoneTick, ProgressBar } from '@/components/Progress';
 import { Pill, accent } from '@/components/ui';
+import { capstones } from '@/data/curriculum';
 import { useProgressStats, useStudent } from '@/lib/student';
 import type { Lesson, Resource, ResourceKind, Unit } from '@/lib/types';
 
@@ -34,7 +35,7 @@ function ResourceChip({ resource }: { resource: Resource }) {
     return (
       <span
         className={`${base} cursor-default bg-cream/5 text-cream-faint ring-cream/8`}
-        title="Coming soon"
+        title="Not linked yet"
       >
         <span aria-hidden>{emoji}</span>
         {resource.label}
@@ -115,6 +116,75 @@ function LessonRow({ lesson }: { lesson: Lesson }) {
   );
 }
 
+type ProjectGroup = {
+  letter: string;
+  /** The capstone name, or undefined if the letter has no capstone. */
+  name?: string;
+  lessons: Lesson[];
+};
+
+const capstoneName = new Map(capstones.map((c) => [c.letter, c.name]));
+
+/**
+ * The Inventor Lab arrives as one flat run: the intro, then every project's
+ * lessons back to back. Split it so each build reads as its own block. A
+ * letter with no lessons gets no group, so nothing empty ever renders.
+ */
+function groupByProject(lessons: Lesson[]): { intro: Lesson[]; groups: ProjectGroup[] } {
+  const intro = lessons.filter((l) => !l.project);
+  const letters = [...new Set(lessons.flatMap((l) => (l.project ? [l.project] : [])))].sort();
+
+  return {
+    intro,
+    groups: letters.map((letter) => ({
+      letter,
+      name: capstoneName.get(letter),
+      lessons: lessons.filter((l) => l.project === letter),
+    })),
+  };
+}
+
+/** One project: a banded heading in the unit accent, then its lessons. */
+function ProjectBlock({
+  group,
+  unitAccent,
+}: {
+  group: ProjectGroup;
+  unitAccent: Unit['accent'];
+}) {
+  const a = accent(unitAccent);
+  return (
+    <li>
+      <div className={`border-t-2 border-ink-line px-5 py-3.5 sm:px-6 ${a.bg}`}>
+        <h4 className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
+          <span
+            className={`h-3 w-3 shrink-0 rounded-full border-2 border-ink-line ${a.dot}`}
+            aria-hidden
+          />
+          <span
+            className={`font-sans text-[11px] font-bold uppercase tracking-[0.18em] ${a.text}`}
+          >
+            Project {group.letter}
+          </span>
+          {group.name && (
+            <>
+              <span className="text-cream-faint" aria-hidden>
+                ·
+              </span>
+              <span className="text-lg font-extrabold leading-tight">{group.name}</span>
+            </>
+          )}
+        </h4>
+      </div>
+      <ul>
+        {group.lessons.map((lesson) => (
+          <LessonRow key={lesson.slug} lesson={lesson} />
+        ))}
+      </ul>
+    </li>
+  );
+}
+
 export default function UnitAccordion({ unit }: { unit: Unit }) {
   const [open, setOpen] = useState(unit.id === 'unit-0');
   const reactId = useId();
@@ -124,7 +194,7 @@ export default function UnitAccordion({ unit }: { unit: Unit }) {
   const trackedCount = unit.lessons.filter((l) => !l.optional).length;
   const progress = byUnit[unit.id] ?? { done: 0, total: trackedCount };
   const a = accent(unit.accent);
-  const unfilmed = unit.lessons.filter((l) => !l.hasVideo).length;
+  const grouped = unit.id === 'unit-5' ? groupByProject(unit.lessons) : null;
 
   // Deep links like /curriculum#unit-3 should land on an open unit — on first
   // paint and when the hash changes while already on the page.
@@ -174,30 +244,22 @@ export default function UnitAccordion({ unit }: { unit: Unit }) {
               <span className="mt-1 block text-sm text-cream-faint">{unit.tagline}</span>
             </span>
 
-            <span className="flex shrink-0 items-center gap-3">
-              <span className="flex flex-wrap items-center gap-1.5">
-                <Pill tone="muted">
-                  {unit.lessons.length} {unit.lessons.length === 1 ? 'lesson' : 'lessons'}
-                </Pill>
-                {unfilmed > 0 && <Pill tone="muted">{unfilmed} still filming</Pill>}
-              </span>
-              <svg
-                viewBox="0 0 24 24"
-                className={`h-5 w-5 shrink-0 text-cream-faint transition-transform duration-300 ${
-                  open ? 'rotate-180' : ''
-                }`}
-                aria-hidden
-              >
-                <path
-                  d="m6 9 6 6 6-6"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </span>
+            <svg
+              viewBox="0 0 24 24"
+              className={`h-5 w-5 shrink-0 text-cream-faint transition-transform duration-300 ${
+                open ? 'rotate-180' : ''
+              }`}
+              aria-hidden
+            >
+              <path
+                d="m6 9 6 6 6-6"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
           </button>
         </h3>
 
@@ -229,8 +291,11 @@ export default function UnitAccordion({ unit }: { unit: Unit }) {
               {unit.blurb}
             </p>
             <ul>
-              {unit.lessons.map((lesson) => (
+              {(grouped ? grouped.intro : unit.lessons).map((lesson) => (
                 <LessonRow key={lesson.slug} lesson={lesson} />
+              ))}
+              {grouped?.groups.map((group) => (
+                <ProjectBlock key={group.letter} group={group} unitAccent={unit.accent} />
               ))}
             </ul>
           </div>

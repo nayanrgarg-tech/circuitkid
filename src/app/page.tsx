@@ -58,17 +58,16 @@ const PROJECT_TONE: Record<string, string> = {
   E: 'bg-lime',
 };
 
-/** Big-number tile that visually matches <StatCounter/> but never animates. */
-function AgesTile() {
-  const range = site.ages.replace('Ages ', '');
+/** Word tile that visually matches <StatCounter/> but never counts. */
+function WordTile({ value, label }: { value: string; label: string }) {
   return (
     <div className="text-center">
       {/* StatCounter still renders an (empty) icon slot above its number.
-          This spacer keeps all four numbers sitting on the same line. */}
+          This spacer keeps all four tiles sitting on the same line. */}
       <div className="mb-1.5 text-2xl" aria-hidden />
-      <div className="font-display text-4xl font-extrabold text-brand-400 sm:text-5xl">{range}</div>
+      <div className="font-display text-4xl font-extrabold text-brand-400 sm:text-5xl">{value}</div>
       <div className="mt-1.5 text-sm font-semibold uppercase tracking-wider text-cream-faint">
-        Ages
+        {label}
       </div>
     </div>
   );
@@ -165,10 +164,10 @@ export default function HomePage() {
       <section className="pb-16 sm:pb-24">
         <Container>
           <div className="card grid grid-cols-2 gap-8 p-8 sm:gap-10 sm:p-10 lg:grid-cols-4">
-            <StatCounter value={stats.lessons} label="Lessons" emoji="" />
-            <StatCounter value={stats.videos} label="Videos ready" emoji="" />
+            <StatCounter value={stats.units} label="Units" emoji="" />
             <StatCounter value={stats.capstones} label="Big builds" emoji="" />
-            <AgesTile />
+            <WordTile value={site.ages.replace('Ages ', '')} label="Ages" />
+            <WordTile value="Weekly" label="Live help" />
           </div>
         </Container>
       </section>
@@ -182,44 +181,36 @@ export default function HomePage() {
         />
 
         <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {capstones.map((c) => {
-            const filming = c.lessonCount === 0;
-            return (
-              <Card as="li" key={c.letter} className="relative flex flex-col">
-                <div className="flex items-start justify-between gap-3">
-                  <span
-                    className={`grid h-12 w-12 shrink-0 place-items-center rounded-xl border-[3px] border-ink-line font-display text-2xl font-extrabold text-cream shadow-[3px_3px_0_var(--color-ink-line)] ${
-                      PROJECT_TONE[c.letter] ?? 'bg-amber'
-                    }`}
-                  >
-                    {c.letter}
-                  </span>
-                  <Pill tone={filming ? 'muted' : 'brand'}>
-                    {filming ? 'Still filming' : `${c.lessonCount} lessons`}
-                  </Pill>
-                </div>
+          {capstones.map((c) => (
+            <Card as="li" key={c.letter} className="relative flex flex-col">
+              <span
+                className={`grid h-12 w-12 shrink-0 place-items-center rounded-xl border-[3px] border-ink-line font-display text-2xl font-extrabold text-cream shadow-[3px_3px_0_var(--color-ink-line)] ${
+                  PROJECT_TONE[c.letter] ?? 'bg-amber'
+                }`}
+              >
+                {c.letter}
+              </span>
 
-                <h3 className="mt-4 text-xl font-bold">
-                  <Link
-                    href="/curriculum#unit-5"
-                    className="transition-colors after:absolute after:inset-0 after:content-[''] group-hover:text-brand-600"
-                  >
-                    {c.name}
-                  </Link>
-                </h3>
+              <h3 className="mt-4 text-xl font-bold">
+                <Link
+                  href="/curriculum#unit-5"
+                  className="transition-colors after:absolute after:inset-0 after:content-[''] group-hover:text-brand-600"
+                >
+                  {c.name}
+                </Link>
+              </h3>
 
-                <p className="mt-2 text-sm leading-relaxed text-cream-dim">{c.blurb}</p>
+              <p className="mt-2 text-sm leading-relaxed text-cream-dim">{c.blurb}</p>
 
-                <ul className="mt-4 flex flex-wrap gap-1.5 pt-1">
-                  {c.skills.map((s) => (
-                    <li key={s}>
-                      <Pill tone="muted">{s}</Pill>
-                    </li>
-                  ))}
-                </ul>
-              </Card>
-            );
-          })}
+              <ul className="mt-4 flex flex-wrap gap-1.5 pt-1">
+                {c.skills.map((s) => (
+                  <li key={s}>
+                    <Pill tone="muted">{s}</Pill>
+                  </li>
+                ))}
+              </ul>
+            </Card>
+          ))}
         </ul>
       </Section>
 
@@ -260,7 +251,6 @@ export default function HomePage() {
         <ul className="grid gap-5 md:grid-cols-2">
           {courseUnits.map((u) => {
             const a = accent(u.accent);
-            const filming = u.lessons.filter((l) => !l.hasVideo).length;
             return (
               <Card as="li" key={u.id} className="relative flex items-start gap-5">
                 <span
@@ -288,11 +278,6 @@ export default function HomePage() {
                   </h3>
 
                   <p className="mt-1 text-sm text-cream-dim">{u.tagline}</p>
-
-                  <p className="mt-3 text-xs font-semibold uppercase tracking-wider text-cream-faint">
-                    {u.lessons.length} {u.lessons.length === 1 ? 'lesson' : 'lessons'}
-                    {filming > 0 ? ` · ${filming} still filming` : ''}
-                  </p>
                 </div>
               </Card>
             );
@@ -301,7 +286,7 @@ export default function HomePage() {
 
         <div className="mt-10 text-center">
           <Btn href="/curriculum" variant="outline" size="lg">
-            See all {stats.lessons} lessons →
+            Open the full curriculum →
           </Btn>
         </div>
       </Section>

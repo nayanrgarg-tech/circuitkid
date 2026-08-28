@@ -4,11 +4,11 @@
     {
       "id": "demo-student",
       "name": "Demo Student",
-      "hash": "6c82982df9ae38189c6490be28bf5d45d9c3b080ae2d1bddd8c48f523b4943c5",
-      "salt": "Br37XoIJuk/uvg8A92dCiA==",
+      "hash": "1471234cf5ebdb3b91156e3b5e0424378604f9f58dc8aa99de11d65361931c33",
+      "salt": "EfoYoHxx5q18VME1aYYgww==",
       "wrap": {
-        "iv": "7DlkJtSw4B2p3Rwf",
-        "data": "sLWxohQ4bARDiTpYudFCMtRM/3uh96OyJ45MHjhHO9H0McIrVZHqFk9LonB4h/XT"
+        "iv": "iuvR193zjWgMvGQ/",
+        "data": "ksvP1irHT0FbMdT1dHi4Nemiz0fkTJ7SaRIOcRPKSJuONvTh7BB4od2/KsqHJBuu"
       },
       "issued": "2026-08-28"
     }

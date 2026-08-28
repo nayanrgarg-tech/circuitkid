@@ -35,7 +35,7 @@ export function ProgressBar({
       </div>
       {showLabel && (
         <p className="mt-1.5 text-xs font-semibold text-cream-faint">
-          {complete ? '🎉 Unit complete!' : `${done} / ${total} done`}
+          {complete ? 'Unit complete' : done > 0 ? `${done} done` : 'Not started'}
         </p>
       )}
     </div>

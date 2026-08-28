@@ -8,24 +8,33 @@ This README is written for future-you, on a day when you have not touched this p
 
 ## 1. Quick start
 
-You need [Node.js](https://nodejs.org) 20 or newer. Check with `node -v`.
-
 ```bash
-npm install     # once, after cloning (or after someone changes package.json)
-npm run dev     # local preview at http://localhost:3111
-npm run build   # produces the finished site in ./out
+npm install
+npm run dev        # preview at http://localhost:3111
 ```
 
-While `npm run dev` is running, save any file and the browser updates itself. Stop it with `Ctrl+C`.
+### Does any of this push to GitHub?
 
-Other useful scripts:
+**No — except `npm run publish`.** Everything else only changes files on your own
+machine. `add-lesson`, `issue-login` and `seal` are all local. Nothing reaches the
+live site until you run:
 
 ```bash
-npm run typecheck   # catches TypeScript mistakes without building
-npm run start       # serves the already-built ./out folder, exactly as visitors see it
+npm run publish
+npm run publish -- "added the laser harp lessons"
 ```
 
-`npm run build` writes a folder of ordinary HTML, CSS, JS and images into `./out`. There is no server involved — that folder *is* the website. `./out` is gitignored; the GitHub Action rebuilds it on every deploy.
+That seals the course, commits everything, pushes, and GitHub rebuilds the site in
+about a minute. It refuses to run if a secret file would be committed.
+
+| Command | What it does | Publishes? |
+| --- | --- | --- |
+| `npm run dev` | preview locally | no |
+| `npm run add-lesson` | add a lesson, answering prompts | no |
+| `npm run issue-login -- "Ava"` | create a student login | no |
+| `npm run seal` | rebuild the course files | no |
+| `npm run unseal` | restore `content/course.json` | no |
+| `npm run publish` | seal, commit, push | **yes** |
 
 ---
 
@@ -86,39 +95,39 @@ For Google, paste the normal share link; `add-lesson` converts it:
 
 ## 3. Issuing student logins
 
-Each student gets one access code. Codes look like `4KJ7-M2QP-XR9T` — no letter `O`, no digit `0`, no `1`/`I`/`L`, so they can be read aloud over the phone without confusion.
-
 ```bash
-npm run issue-login -- "Ava Patel"          # one student, prints the code once
-npm run issue-login -- "Ava" "Ben" "Cleo"   # several at once
-npm run issue-login -- --blank 5            # 5 unassigned codes for a class
-npm run issue-login -- --list               # who currently has a login
-npm run issue-login -- --revoke ava-patel   # remove one (use the id from --list)
+npm run issue-login -- "Ava Patel"
 ```
 
-The `--` after the script name is required. It tells npm "everything after this belongs to the script, not to npm."
+Prints a random code like `J6TP-KAEZ-J7AW`. **Random codes are shown once and cannot
+be looked up again** — only a hash and an encrypted key go into `roster.json`.
 
-*(If `npm run issue-login` is ever missing from `package.json`, the same tool runs directly: `node scripts/issue-login.mjs -- "Ava Patel"`.)*
+### Codes you choose (recommended)
 
-### Things to know before you hand a code out
+```bash
+npm run issue-login -- "Ava Patel" --code AVA-ROBOT-2026
+```
 
-- **The roster file is safe to commit.** `src/data/roster.json` stores only a SHA-256 *hash* of each code, plus the student's name, id and issue date. Reading the file does not reveal anybody's code.
-- **A code is displayed once and cannot be recovered.** That is a consequence of storing only hashes. If a student loses their code, you do not look it up — you revoke and re-issue:
-  ```bash
-  npm run issue-login -- --revoke ava-patel
-  npm run issue-login -- "Ava Patel"
-  ```
-  Note this gives them a fresh `id`, so their old saved progress will not follow them automatically. Have them export a transfer code first if they still have access on any device (see §5).
-- **Nothing is live until you deploy.** Issuing a login edits a file on your computer. Commit and push it, and the GitHub Action rebuilds the site with the new roster baked in. Until then the new code will not work on circuitkid.com.
-  ```bash
-  git add src/data/roster.json
-  git commit -m "Issue login for Ava Patel"
-  git push
-  ```
-- **Revoke the demo login before launch.** The repo ships with a seeded `demo` student so you can test the sign-in flow without issuing a real code. Remove it before you invite anyone:
-  ```bash
-  npm run issue-login -- --revoke demo
-  ```
+Pick the code yourself and it never changes on you. If a student loses it, revoke and
+re-issue the *same* code. Punctuation and case are ignored, so `AVA-ROBOT-2026`,
+`ava robot 2026` and `avarobot2026` are all the same code — students can type it
+however they like.
+
+Codes must be at least 8 letters or digits, and two students cannot share one.
+
+### The rest
+
+```bash
+npm run issue-login -- "Ava" "Ben" "Cleo"     # several at once
+npm run issue-login -- --blank 5              # 5 unassigned codes for a class
+npm run logins                                # who has a login (and their id)
+npm run issue-login -- --revoke ava-patel     # remove one, by id from the list
+```
+
+Revoking deletes that student's wrapped key, so their code stops opening the course.
+Everyone else keeps working.
+
+> **Issuing a login does not publish it.** Run `npm run publish` afterwards (§1).
 
 ---
 
@@ -284,6 +293,6 @@ Note that `src/app/lessons/[slug]/` is a dynamic route. Because the site is a st
 - [ ] **Social links are empty.** `links.youtube`, `links.instagram` and `links.tiktok` in
       `src/data/site.ts` are `''`, so the footer shows them as "soon". Fill them in or
       delete the rows.
-- [ ] **Revoke the demo login before launch:** `npm run issue-login -- --revoke demo`
+- [ ] **Revoke the demo login before launch:** `npm run issue-login -- --revoke demo-student`
 - [ ] **Check your embedded decks are publicly shared** (see §2). An embed that is not
       shared shows a Google sign-in box to every student.
