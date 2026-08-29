@@ -26,7 +26,7 @@ export function ProgressBar({
         aria-valuenow={pct}
         aria-valuemin={0}
         aria-valuemax={100}
-        aria-label={`${done} of ${total} lessons complete`}
+        aria-label={complete ? 'Unit complete' : `${done} lessons complete`}
       >
         <div
           className={`h-full rounded-full transition-[width] duration-700 ease-out ${complete ? 'bg-lime' : accent}`}

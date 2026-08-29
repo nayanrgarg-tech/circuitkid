@@ -24,6 +24,8 @@ export type Lesson = {
   optional?: boolean;
   /** Inventor Lab letter (A–E). */
   project?: string;
+  /** Renders the interactive site tour in place of a video. */
+  tour?: boolean;
 };
 
 /**

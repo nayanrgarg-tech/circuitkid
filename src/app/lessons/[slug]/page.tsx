@@ -74,7 +74,7 @@ export default async function LessonPage({ params }: { params: Promise<{ slug: s
           </div>
         </header>
 
-        <LessonBody slug={lesson.slug} title={lesson.title} />
+        <LessonBody slug={lesson.slug} title={lesson.title} tour={lesson.tour} />
 
         {/* ---------- prev / next ---------- */}
         <nav className="mt-16 grid gap-4 sm:grid-cols-2" aria-label="Lesson navigation">

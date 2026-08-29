@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 
+import { AnnouncementBanner } from '@/components/Announcements';
 import StatCounter from '@/components/StatCounter';
 import { Btn, Card, Container, Pill, Section, SectionHead, accent } from '@/components/ui';
 import { capstones, stats, units } from '@/data/curriculum';
@@ -78,6 +79,10 @@ export default function HomePage() {
 
   return (
     <>
+      {/* Renders nothing at all when there is no announcement, so the hero
+          keeps its place. */}
+      <AnnouncementBanner />
+
       {/* ------------------------------------------------ 1. HERO */}
       <section className="relative overflow-hidden">
         <div aria-hidden className="pointer-events-none absolute inset-0 grid-dots opacity-60" />
