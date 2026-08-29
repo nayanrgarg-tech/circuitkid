@@ -2,46 +2,145 @@
   "//": "Managed by: npm run issue-login. Only SHA-256 hashes are stored, so this file is safe to commit.",
   "students": [
     {
-      "id": "demo-student",
-      "name": "Demo Student",
-      "hash": "1471234cf5ebdb3b91156e3b5e0424378604f9f58dc8aa99de11d65361931c33",
-      "salt": "EfoYoHxx5q18VME1aYYgww==",
+      "id": "demo",
+      "name": "demo",
+      "hash": "1c402d959b832d5a2b787fd2ecda73730d858a12d05e59a99fef1d3883885c09",
+      "salt": "W7IE7nXNike+8ph6xtwg+Q==",
       "wrap": {
-        "iv": "iuvR193zjWgMvGQ/",
-        "data": "ksvP1irHT0FbMdT1dHi4Nemiz0fkTJ7SaRIOcRPKSJuONvTh7BB4od2/KsqHJBuu"
-      },
-      "issued": "2026-08-28"
-    },
-    {
-      "id": "test",
-      "name": "test",
-      "hash": "f3b1440d8963ab530af6cafaffacf40784dbca140b2d0d074ef9f6684918f4c2",
-      "salt": "FN/VnekmBrEo72R+O8GyGQ==",
-      "wrap": {
-        "iv": "yvOJa1l5tJE+RLxk",
-        "data": "CH7d/RMvdmomkgR0N6x/dEcpgSFyzWyDUEMi+jC2MyfdjVUub4Lty8qRczP2ZkaM"
+        "iv": "/+jMMMshp9pJThZ3",
+        "data": "04KQq+8OV4d1dtEV1O2OYqOIEbsntH8Adph8T4sHvhqrYLXpvkIWq13gacYduidv"
       },
       "issued": "2026-08-29"
     },
     {
-      "id": "test-2643-2026",
-      "name": "test-2643-2026",
-      "hash": "f471dbff94e608d3ac5596304edebc6e654b6d9796970ba7ded6c87c34382c2c",
-      "salt": "sqYXk4pymWB7jb4JVVSNvQ==",
+      "id": "aidan",
+      "name": "Aidan",
+      "hash": "0992cd18ed22d1b2a7c9dfe2e9aa54ea8e0733c158ff180665ce4d05e1c1ba7a",
+      "salt": "LwHu8UhMNE0dAgEonXqr8w==",
       "wrap": {
-        "iv": "PNlzTgCArda26tme",
-        "data": "QNV+eIN9mbGkYGgJoccFMFxYbJqkeRgJIWhHEs0E4l6DoRoJFkFMDTd/sti2Gt+D"
+        "iv": "Rw+xLOFy3SUxMW+E",
+        "data": "ffeCjLM8cS/8AtbmCxSHEWb4BMsnxfCOzh5KdMqvOr8kbJmu7+rEMScAgc0Af0hs"
       },
       "issued": "2026-08-29"
     },
     {
-      "id": "test2",
-      "name": "test2",
-      "hash": "ef797c8118f02dfb649607dd5d3f8c7623048c9c063d532cc95c5ed7a898a64f",
-      "salt": "c3sZM7N49Vbpu9kC2orqBw==",
+      "id": "niko",
+      "name": "Niko",
+      "hash": "7f696fb00b538538c561ab00c08a3c250e6a593427ab6a7507ba0bbe35dda6a9",
+      "salt": "Otj9bSNCcu7kh505fFnxbw==",
       "wrap": {
-        "iv": "UMWRx8FAtGkcGNW2",
-        "data": "mnKR+w6QZ8fCuyobkhVDK9hehGlQudkilF3aRsTWAl0HKXiiI1ncMlcvQqXusdjK"
+        "iv": "SVZWrt/yOlw8qrN/",
+        "data": "kD4KIYeRqp2eDVxBCBfsq8zguUpYNNY7nCJOWDudJTe9bkI+QH1YFmj8YuSXrqGx"
+      },
+      "issued": "2026-08-29"
+    },
+    {
+      "id": "gray",
+      "name": "Gray",
+      "hash": "dafcdf592d2257f0658017dddb05bca0f4630f76b6de64a139372c4882edaa85",
+      "salt": "keUHtoLYe6cimFZ64x8GMw==",
+      "wrap": {
+        "iv": "8rTVPW+PSLnqx4aF",
+        "data": "o5LM/RdfhF1+e07/h6aU7WE2h5Ao9pqaOlyjtK4z922TMlTnVt4mT52RSQClUU1M"
+      },
+      "issued": "2026-08-29"
+    },
+    {
+      "id": "crocokat",
+      "name": "crocokat",
+      "hash": "b26e1ddc9d23ca581dec4ca015c76ed9a12b4197831eb315a9d696662f0abb59",
+      "salt": "/9BhARoL9MFJX751x5VKsg==",
+      "wrap": {
+        "iv": "LZ0lKg7I3NwuMyC2",
+        "data": "TVMY5Ld3R26K+L5NeiJ8fCbN9a32uyFscAw0o6A8mZZt6WdIFPrIm4zRlZ1Fp/q6"
+      },
+      "issued": "2026-08-29"
+    },
+    {
+      "id": "cole",
+      "name": "Cole",
+      "hash": "a0add17e8e242bcb52aa61117453dd0a95fe905d1ec1351203313af6600b4eb7",
+      "salt": "VutQI6uabTGOgIfRV35RCg==",
+      "wrap": {
+        "iv": "GrZyYsxqTITYnLN2",
+        "data": "Lx2AJa6R9IDkWOTd0e/eoGp4p9EheQrFnUKiw2t/a7tz48Q9yHsdyHd6RZwAUy/g"
+      },
+      "issued": "2026-08-29"
+    },
+    {
+      "id": "conor",
+      "name": "Conor",
+      "hash": "53bae7df2e6caf4e756e56621abf6a93dcb15e3c9c9aa0e93749a9e2f03e11d4",
+      "salt": "mjE56qPn+bpLAqt/QcZa2g==",
+      "wrap": {
+        "iv": "YGRQrBAfU8RIE+eq",
+        "data": "0ynIaURfIsxDw+Khc9dYmatzUPowbfxapQJ6scCm5VL8O4tMsicUiB3rJu03FcWm"
+      },
+      "issued": "2026-08-29"
+    },
+    {
+      "id": "hans",
+      "name": "Hans",
+      "hash": "2459c87b06eb0a4597a75f71d2401efa677a77ed6150a4e33d9a9fcca566df20",
+      "salt": "pS/oBzVOpU1H1HjWO42MhA==",
+      "wrap": {
+        "iv": "KICA55c+CXHWDylb",
+        "data": "Sj44WKi7B75VOwTFIUha1IPXbh/kMbQv5bmDoJBIh7oDbp1fdH2DoeVTt96nBTuf"
+      },
+      "issued": "2026-08-29"
+    },
+    {
+      "id": "jonathan",
+      "name": "Jonathan",
+      "hash": "434f411fd08abe744e2fa5ab6390ef9f9ba1358813a67d87b07e085f8e1bd3f7",
+      "salt": "wRrZeLcIRz6CcoYxDQn27g==",
+      "wrap": {
+        "iv": "NHZFUmKVq4vTAtmR",
+        "data": "jI/6+L9mqFcwzvUQmFF8uUZc4wB7kEMgZDj1rfyi33R70yAGkRwJmqeJwwu3gi6Z"
+      },
+      "issued": "2026-08-29"
+    },
+    {
+      "id": "william",
+      "name": "William",
+      "hash": "224b002302f21e3cb3d318f2c269d26d52eaba37862227c0fd27b9ece2685572",
+      "salt": "WPa3/TitpeihKaQGaibdrg==",
+      "wrap": {
+        "iv": "CDGtKSkCiWaVdtSz",
+        "data": "eJk06JzCXuzdmvhtTBoMhHA0OFWGHfIAN54ypSChiMFEDLLNwBo7EYgYzsOtviAE"
+      },
+      "issued": "2026-08-29"
+    },
+    {
+      "id": "leela",
+      "name": "Leela",
+      "hash": "26f98d657e42325a46608a4302caf311e7e0ec1da0ceeb77cdc15c5730a4a278",
+      "salt": "1s6zYzWVwXYparaJojiGMA==",
+      "wrap": {
+        "iv": "H898NU/8xX/42+SJ",
+        "data": "o0trzKNot086PegLkzENGFeyJsATChj67EWN88w3jcBPZxmmQ7gOxYHTJmsMzbxv"
+      },
+      "issued": "2026-08-29"
+    },
+    {
+      "id": "sam",
+      "name": "Sam",
+      "hash": "c11f59844b1fc220caecf8281a21c7c823a1a11256203791d48a6d0ffbf87f89",
+      "salt": "nPYtA+u8gwt1S++EcIo7Qg==",
+      "wrap": {
+        "iv": "cnAD7LfWNIsfKujR",
+        "data": "TwbslskXVRHGLQ1D9YHsficVH42l30Ay9uM+aZWQCC705LgWwKuZKB04cSAzUtRT"
+      },
+      "issued": "2026-08-29"
+    },
+    {
+      "id": "cadence",
+      "name": "Cadence",
+      "hash": "f9709a430768c33e46867c71d76dc42aa2d9dfd1d948917cbf7ea6264fe5a621",
+      "salt": "t6NVGTxkYOpqmR4GAh/V+A==",
+      "wrap": {
+        "iv": "4gNshbDg2rQpT202",
+        "data": "ejYmSe+Yb1G0KCn7Upl+kfsbzWfB0PZO6/O6RxUQkVl2Jr6VHMSbcVin8RqS88Ey"
       },
       "issued": "2026-08-29"
     }
