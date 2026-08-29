@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Btn, Card, Pill, Section } from '@/components/ui';
 import { links } from '@/data/site';
@@ -12,6 +12,13 @@ export default function LoginPage() {
   const [code, setCode] = useState('');
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [insecure, setInsecure] = useState(false);
+
+  // Web Crypto is unavailable on plain http, so no code can work there. Detect it
+  // up front instead of letting the student think they mistyped.
+  useEffect(() => {
+    setInsecure(!window.isSecureContext || !window.crypto?.subtle);
+  }, []);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -72,6 +79,25 @@ export default function LoginPage() {
         )}
 
         {/* ---------- sign-in form ---------- */}
+        {insecure && (
+          <div
+            role="alert"
+            className="mb-6 rounded-card border-2 border-ink-line bg-amber/20 p-5 text-sm leading-relaxed hard-shadow"
+          >
+            <p className="font-display text-base font-bold">This page is not on a secure connection</p>
+            <p className="mt-2">
+              Access codes only work over <strong>https</strong>. Open{' '}
+              <a
+                href="https://circuitkid.com/login/"
+                className="font-bold underline underline-offset-4"
+              >
+                https://circuitkid.com/login/
+              </a>{' '}
+              and try again.
+            </p>
+          </div>
+        )}
+
         {!student && (
           <>
             <div className="card p-6 sm:p-8">
