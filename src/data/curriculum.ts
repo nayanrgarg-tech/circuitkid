@@ -13,7 +13,7 @@ const rawUnits: (Omit<Unit, 'lessons'> & { lessons: Omit<Lesson, 'unitId'>[] })[
     lessons: [
       { slug: "0-1a-getting-to-know-your-kit", id: "0.1a", title: "Getting to Know Your Kit", blurb: "Open the box. Meet everything inside. None of it bites.", hasVideo: true, },
       { slug: "0-1b-getting-to-know-your-kit-part-2", id: "0.1b", title: "Getting to Know Your Kit, Part 2", blurb: "A quick look at the fiddly modules. The ones with extra pins and tiny writing on them.", hasVideo: true, },
-      { slug: "0-2-how-to-navigate-the-lessons", id: "0.2", title: "How to Navigate the Lessons", blurb: "How this works: watch, wire, run. Plus where the code lives and how to yell for help.", hasVideo: true, },
+      { slug: "0-2-how-to-navigate-the-lessons", id: "0.2", title: "How to Navigate the Lessons", blurb: "A quick walk through the site. Where the lessons live, how a lesson page works, and how your progress gets saved.", hasVideo: false, tour: true, },
       { slug: "0-3-downloading-the-arduino-software", id: "0.3", title: "Downloading the Arduino Software", blurb: "Get the free Arduino app onto your computer and plug the board in for the first time.", hasVideo: true, },
     ],
   },

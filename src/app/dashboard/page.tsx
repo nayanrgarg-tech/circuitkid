@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { AnnouncementList, announcements } from '@/components/Announcements';
 import { Btn, Card, Pill, Section, accent } from '@/components/ui';
 import { ProgressBar, ProgressRing } from '@/components/Progress';
 import { allLessons, units, unitById } from '@/data/curriculum';
@@ -11,7 +12,7 @@ type ImportMsg = { ok: boolean; text: string };
 
 export default function DashboardPage() {
   const { ready, student, completed, signOut, reset, exportCode, importCode } = useStudent();
-  const { done, total, pct, byUnit } = useProgressStats();
+  const { done, pct, byUnit } = useProgressStats();
 
   const [copyState, setCopyState] = useState<'idle' | 'copied' | 'failed'>('idle');
   const [importValue, setImportValue] = useState('');
@@ -65,7 +66,6 @@ export default function DashboardPage() {
   }
 
   /* ---------- signed in ---------- */
-  const remaining = Math.max(total - done, 0);
   const nextUp = allLessons.find((l) => !l.optional && !completed.has(l.slug)) ?? null;
   const nextUnit = nextUp ? unitById.get(nextUp.unitId) : undefined;
   /* Everything ticked off, grouped under the unit it came from. */
@@ -108,8 +108,9 @@ export default function DashboardPage() {
             Hey {student.name} 👋
           </h1>
           <p className="mt-3 text-lg text-cream-dim">
-            {done} of {total} lessons done.{' '}
-            {remaining > 0 ? `${remaining} still to go.` : 'That is all of them. 🏆'}
+            {done === 0
+              ? 'Nothing ticked off yet. Start anywhere.'
+              : `${done} ${done === 1 ? 'lesson' : 'lessons'} done so far.`}
           </p>
         </div>
         <Btn variant="ghost" onClick={signOut}>
@@ -179,6 +180,14 @@ export default function DashboardPage() {
         </div>
       </div>
 
+      {/* ---------- announcements ---------- */}
+      {announcements.length > 0 && (
+        <>
+          <h2 className="mt-16 mb-6 text-2xl font-extrabold sm:text-3xl">Announcements</h2>
+          <AnnouncementList />
+        </>
+      )}
+
       {/* ---------- everything finished ---------- */}
       <h2 className="mt-16 mb-6 text-2xl font-extrabold sm:text-3xl">
         <span className="mr-2.5 align-middle" aria-hidden>
@@ -197,7 +206,6 @@ export default function DashboardPage() {
         <div className="space-y-6">
           {finishedByUnit.map(({ unit, lessons }) => {
             const a = accent(unit.accent);
-            const tracked = unit.lessons.filter((l) => !l.optional).length;
             const doneHere = lessons.filter((l) => !l.optional).length;
             return (
               <div key={unit.id} className="card overflow-hidden">
@@ -210,7 +218,7 @@ export default function DashboardPage() {
                   </span>
                   <span className="font-display text-lg font-bold">{unit.title}</span>
                   <Pill tone="good" className="ml-auto">
-                    {doneHere} of {tracked}
+                    {doneHere} done
                   </Pill>
                 </div>
                 <ul>

@@ -24,7 +24,7 @@ import {
   createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode,
 } from 'react';
 import roster from '@/data/roster.json';
-import { trackedLessons, units } from '@/data/curriculum';
+import { allLessons, trackedLessons, units } from '@/data/curriculum';
 import { asset } from '@/data/site';
 import { openCourse, sha256Hex, unwrapCourseKey, type RosterEntry } from './courseKey';
 import type { LessonContent } from './types';
@@ -56,7 +56,9 @@ type Ctx = {
 const C = createContext<Ctx | null>(null);
 const normalize = (s: string) => s.trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
 const students = roster.students as RosterEntry[];
-const validSlugs = new Set(trackedLessons.map((l) => l.slug));
+/* Every lesson can be ticked, side quests included. trackedLessons is only
+   used for the percentage denominator, never for validating saved progress. */
+const validSlugs = new Set(allLessons.map((l) => l.slug));
 
 function readProgress(id: string): Set<string> {
   try {

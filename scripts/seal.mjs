@@ -91,7 +91,9 @@ for (const u of course.units) {
     lessons: [`);
   for (const l of u.lessons) {
     const extra =
-      (l.optional ? ' optional: true,' : '') + (l.project ? ` project: ${J(l.project)},` : '');
+      (l.optional ? ' optional: true,' : '') +
+      (l.project ? ` project: ${J(l.project)},` : '') +
+      (l.tour ? ' tour: true,' : '');
     out.push(
       `      { slug: ${J(l.slug)}, id: ${J(l.id)}, title: ${J(l.title)}, blurb: ${J(l.blurb)},` +
       ` hasVideo: ${Boolean(l.video)},${extra} },`,

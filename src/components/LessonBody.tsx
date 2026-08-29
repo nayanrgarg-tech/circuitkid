@@ -10,9 +10,10 @@
  */
 
 import Link from 'next/link';
+import SiteTour from '@/components/SiteTour';
 import VideoEmbed from '@/components/VideoEmbed';
 import { CompleteButton } from '@/components/Progress';
-import { Btn, Pill } from '@/components/ui';
+import { Btn } from '@/components/ui';
 import { useStudent } from '@/lib/student';
 import type { Resource, ResourceKind } from '@/lib/types';
 
@@ -44,42 +45,64 @@ function ResourceChip({ resource }: { resource: Resource }) {
   );
 }
 
-export default function LessonBody({ slug, title }: { slug: string; title: string }) {
+export default function LessonBody({
+  slug,
+  title,
+  tour,
+}: {
+  slug: string;
+  title: string;
+  tour?: boolean;
+}) {
   const { ready, student, lesson } = useStudent();
   const content = lesson(slug);
 
+  /* The tour teaches the site itself and holds nothing private, so it sits
+     above the locked/unlocked split and shows to everyone. */
+  const tourBlock = tour ? (
+    <div className="mt-8">
+      <SiteTour />
+    </div>
+  ) : null;
+
   if (!ready) {
     return (
-      <div className="mt-8 animate-pulse space-y-5" aria-hidden>
-        <div className="aspect-video w-full rounded-card bg-ink-600" />
-        <div className="h-11 w-56 rounded-full bg-ink-600" />
-      </div>
+      <>
+        {tourBlock}
+        <div className="mt-8 animate-pulse space-y-5" aria-hidden>
+          {!tour && <div className="aspect-video w-full rounded-card bg-ink-600" />}
+          <div className="h-11 w-56 rounded-full bg-ink-600" />
+        </div>
+      </>
     );
   }
 
   /* ---------------- locked ---------------- */
   if (!student || !content) {
     return (
-      <section className="mt-8">
-        <div className="card grid place-items-center px-6 py-16 text-center">
-          <div className="max-w-md">
-            <p className="text-sm font-bold uppercase tracking-[0.18em] text-brand-600">
-              Members only
-            </p>
-            <h2 className="mt-3 font-display text-3xl font-extrabold leading-tight">
-              This lesson is locked
-            </h2>
-            <p className="mt-4 leading-relaxed text-cream-dim">
-              The video, the wiring diagram and the code all come with the kit. Sign in with
-              the access code that came with yours.
-            </p>
-            <div className="mt-7 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-              <Btn href="/login" size="lg">Sign in</Btn>
-              <Btn href="/kit" variant="outline">Get a kit</Btn>
+      <>
+        {tourBlock}
+        <section className="mt-8">
+          <div className="card grid place-items-center px-6 py-16 text-center">
+            <div className="max-w-md">
+              <p className="text-sm font-bold uppercase tracking-[0.18em] text-brand-600">
+                Members only
+              </p>
+              <h2 className="mt-3 font-display text-3xl font-extrabold leading-tight">
+                This lesson is locked
+              </h2>
+              <p className="mt-4 leading-relaxed text-cream-dim">
+                The video, the wiring diagram and the code all come with the kit. Sign in with
+                the access code that came with yours.
+              </p>
+              <div className="mt-7 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+                <Btn href="/login" size="lg">Sign in</Btn>
+                <Btn href="/kit" variant="outline">Get a kit</Btn>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </>
     );
   }
 
@@ -90,7 +113,7 @@ export default function LessonBody({ slug, title }: { slug: string; title: strin
   return (
     <>
       <div className="mt-8">
-        <VideoEmbed src={content.video} title={title} />
+        {tour ? <SiteTour /> : <VideoEmbed src={content.video} title={title} />}
       </div>
 
       <div className="mt-6 flex flex-wrap items-center gap-3">

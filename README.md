@@ -32,6 +32,7 @@ about a minute. It refuses to run if a secret file would be committed.
 | `npm run dev` | preview locally | no |
 | `npm run add-lesson` | add a lesson, answering prompts | no |
 | `npm run issue-login -- "Ava"` | create a student login | no |
+| `npm run announce -- "…"` | post an announcement | no |
 | `npm run seal` | rebuild the course files | no |
 | `npm run unseal` | restore `content/course.json` | no |
 | `npm run publish` | seal, commit, push | **yes** |
@@ -131,21 +132,42 @@ Everyone else keeps working.
 
 ---
 
-## 4. How progress tracking works
+## 4. Announcements and progress
 
-When a signed-in student marks a lesson complete, that gets saved in **their browser's `localStorage`**, on **the device they are using**, keyed to their student id. Nothing is sent anywhere — there is no database and no server in this project.
+### Posting an announcement
 
-The dashboard shows two things: the **next lesson** they haven't done, and a list of
-**every lesson they've finished**, grouped by unit. There is no time tracking anywhere in
-the app — no durations, no hours logged.
+```bash
+npm run announce -- "New Project C lessons are up"
+npm run announce -- "No class Saturday" "Back to the usual time next week."
+npm run announce -- --list
+npm run announce -- --pin 2026-08-29-new-project-c     # keep it at the top
+npm run announce -- --remove 2026-08-29-new-project-c
+```
 
-What that means in practice:
+The newest one shows as a bar on the home page (students can dismiss it, and it stays
+dismissed until you post a newer one). All of them are listed on the dashboard.
+
+Announcements are **public** — anyone can read them. Don't put access codes in one.
+As with everything else, run `npm run publish` to put it live.
+
+### How progress tracking works
+
+When a signed-in student marks a lesson complete, it saves to **their browser's
+localStorage**, on **the device they are using**, keyed to their student id. There is no
+database and no server.
 
 - Progress is private to that student on that browser.
-- Progress on the iPad and progress on the laptop are two separate lists.
-- Clearing browser data, or using a private/incognito window, loses it.
+- The iPad and the laptop keep two separate lists.
+- Clearing browser data, or an incognito window, loses it.
+- Signed-out visitors have nothing to track — the "mark complete" button asks them to
+  sign in first.
 
-To move progress between devices, the dashboard produces a **transfer code**: a long string the student copies from the old device and pastes into "import" on the new one. Importing *merges* — it adds completed lessons rather than overwriting, so it is safe to run in either direction.
+The dashboard shows the next lesson they haven't done and everything they have finished,
+grouped by unit. No time tracking, and no course-size totals anywhere.
+
+To move progress between devices, the dashboard makes a **transfer code**: a long string
+they copy from the old device and paste into "import" on the new one. Importing *merges*,
+so it is safe to run in either direction.
 
 ---
 
