@@ -121,12 +121,25 @@ export function StudentProvider({ children }: { children: ReactNode }) {
     const cleaned = normalize(code);
     if (!cleaned) return { ok: false, error: 'Type your access code to get in.' };
 
+    // Web Crypto only exists on a secure origin (https, or localhost). On plain
+    // http it is undefined, and no code can possibly work — say so plainly rather
+    // than blaming the student's typing.
+    if (!window.isSecureContext || !window.crypto?.subtle) {
+      return {
+        ok: false,
+        error:
+          location.protocol === 'http:'
+            ? 'Signing in needs a secure connection. Open this site with https:// instead of http://.'
+            : 'This browser cannot run the sign-in check. Try Chrome, Safari or Firefox.',
+      };
+    }
+
     let entry: RosterEntry | undefined;
     try {
       const hash = await sha256Hex(cleaned);
       entry = students.find((s) => s.hash === hash);
     } catch {
-      return { ok: false, error: 'This browser blocked the sign-in check. Try Chrome or Safari.' };
+      return { ok: false, error: 'This browser cannot run the sign-in check. Try Chrome, Safari or Firefox.' };
     }
     if (!entry) return { ok: false, error: "That code didn't work. Check for typos, or ask for a new one." };
 
