@@ -1,7 +1,5 @@
 'use client';
 
-import { useEffect } from 'react';
-
 /**
  * Everything on a lesson page that needs an access code: the video, the slides,
  * the code, the wiring, the materials list and the learning goals.
@@ -56,11 +54,8 @@ export default function LessonBody({
   title: string;
   tour?: boolean;
 }) {
-  const { ready, student, lesson, trackLesson } = useStudent();
+  const { ready, student, lesson } = useStudent();
   const content = lesson(slug);
-
-  // Counts active time on this lesson, and reports it when they leave.
-  useEffect(() => trackLesson(slug), [trackLesson, slug]);
 
   /* The tour teaches the site itself and holds nothing private, so it sits
      above the locked/unlocked split and shows to everyone. */
