@@ -15,7 +15,8 @@
     "unseal": "node scripts/unseal.mjs",
     "add-lesson": "node scripts/add-lesson.mjs",
     "publish": "node scripts/publish.mjs",
-    "announce": "node scripts/announce.mjs"
+    "announce": "node scripts/announce.mjs",
+    "link-form": "node scripts/link-form.mjs"
   },
   "dependencies": {
     "next": "15.1.6",

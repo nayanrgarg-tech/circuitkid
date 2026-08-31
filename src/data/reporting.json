@@ -1,0 +1,5 @@
+{
+  "//": "Set up with: npm run link-form -- <your Google Form URL>. Empty formUrl = reporting off.",
+  "formUrl": "",
+  "fields": {}
+}
