@@ -33,7 +33,6 @@ about a minute. It refuses to run if a secret file would be committed.
 | `npm run add-lesson` | add a lesson, answering prompts | no |
 | `npm run issue-login -- "Ava"` | create a student login | no |
 | `npm run announce -- "…"` | post an announcement | no |
-| `npm run link-form -- "…"` | send progress to your Google Form | no |
 | `npm run seal` | rebuild the course files | no |
 | `npm run unseal` | restore `content/course.json` | no |
 | `npm run publish` | seal, commit, push | **yes** |
@@ -172,71 +171,7 @@ so it is safe to run in either direction.
 
 ---
 
-## 5. Seeing how your students are doing
-
-Progress lives in each student's own browser, so it needs somewhere to go. The site posts a
-row to a Google Form, which lands in a Sheet you own. No accounts, no cost, nothing to keep
-alive. **This is off until you set it up**, and the site works fine without it.
-
-### One-time setup (about two minutes)
-
-1. Make a new Google Form. Add **five short-answer questions**. The titles only need to
-   *contain* these words:
-
-   | Question title | What lands in it |
-   | --- | --- |
-   | Student | who it is |
-   | Lesson | which lesson |
-   | Status | `done`, `opened` or `unmarked` |
-   | Minutes | active minutes on that lesson |
-   | Total | their running total |
-
-2. Link it. Paste the form's normal link:
-
-   ```bash
-   npm run link-form -- "https://docs.google.com/forms/d/e/YOUR_FORM_ID/viewform"
-   ```
-
-   That reads the form and works out Google's internal field ids itself. You never see them.
-
-3. `npm run publish`
-
-In the Form, hit **Responses → Link to Sheets** once, and rows start arriving.
-
-To switch it off again: `npm run link-form -- --off`
-
-### Reading it
-
-Two options. The Sheet itself is perfectly usable — sort by Student or Total.
-
-For something nicer, open **/admin** on the site. Paste the Sheet's CSV (File → Download →
-CSV, or just copy the cells) and it turns the raw rows into a card per student: lessons
-completed, total active time, when they were last on, and a per-unit breakdown. If you
-publish the Sheet to the web as CSV you can paste that URL once instead and it loads itself.
-
-### What gets sent, and what doesn't
-
-Sent: the student's name, the lesson, whether it is done, and minutes.
-Never sent: their access code, the course key, or any lesson content.
-
-A row goes out when a student ticks a lesson off, and when they leave a lesson they spent
-more than a minute on. If they are offline it queues and retries later.
-
-**Time is measured as *active* time.** The clock stops when the tab is hidden, the window
-loses focus, or there has been no input for a minute — so a laptop left open overnight will
-not report eight hours. It is capped at four hours per lesson as a backstop.
-
-Two honest limits:
-
-- **/admin is not private.** Anything on a static site is public. The URL is unlisted, but
-  the page holds no data of its own — nothing appears until you paste it in. Don't treat it
-  as a locked door.
-- **A determined student could send fake rows**, since the posting happens in their browser.
-  Fine for seeing who is keeping up; not something to grade on.
-
----
-
-## 6. What the login actually protects
+## 5. What the login actually protects
 
 The lesson content is **encrypted**, not just hidden.
 
@@ -259,7 +194,7 @@ course being readable by anyone who simply finds the site.
 
 ---
 
-## 7. Upgrading to real accounts (optional)
+## 6. Upgrading to real accounts (optional)
 
 If you later want real email + password accounts, and progress that syncs across devices automatically with no transfer codes, you do not need to rewrite the site. The whole storage layer is deliberately kept behind one seam:
 
@@ -279,7 +214,7 @@ Keep `readProgress`/`writeProgress` as a local cache even after the upgrade — 
 
 ---
 
-## 8. Deploying to GitHub Pages
+## 7. Deploying to GitHub Pages
 
 **Push to `main`. That's the whole deploy.**
 
@@ -327,7 +262,7 @@ GitHub Pages historically ran everything through Jekyll, which **ignores folders
 
 ---
 
-## 9. Project structure
+## 8. Project structure
 
 ```
 CircuitKid/
@@ -369,7 +304,7 @@ Note that `src/app/lessons/[slug]/` is a dynamic route. Because the site is a st
 
 ---
 
-## 10. Things left to fill in
+## 9. Things left to fill in
 
 - [ ] **Projects C, D and E have no lessons yet.** Laser Harp, Crack the Vault and Sentry
       Turret show up on the site as "still filming". To add one, append lessons to `unit5`

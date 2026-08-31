@@ -21,15 +21,12 @@
  */
 
 import {
-  createContext, useCallback, useContext, useEffect, useMemo, useRef, useState,
-  type ReactNode,
+  createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode,
 } from 'react';
 import roster from '@/data/roster.json';
 import { allLessons, trackedLessons, units } from '@/data/curriculum';
 import { asset } from '@/data/site';
 import { openCourse, sha256Hex, unwrapCourseKey, type RosterEntry } from './courseKey';
-import { flushReportQueue, report } from './report';
-import { readTime, startLessonClock, type TimeMap } from './timeSpent';
 import type { LessonContent } from './types';
 
 const SESSION_KEY = 'circuitkid.session.v2';
@@ -54,10 +51,6 @@ type Ctx = {
   reset: () => void;
   exportCode: () => string;
   importCode: (code: string) => Result;
-  /** Active seconds per lesson slug, for this student on this device. */
-  timeSpent: TimeMap;
-  /** Starts the active-time clock for a lesson. Returns a stop function. */
-  trackLesson: (slug: string) => () => void;
 };
 
 const C = createContext<Ctx | null>(null);
@@ -66,8 +59,6 @@ const students = roster.students as RosterEntry[];
 /* Every lesson can be ticked, side quests included. trackedLessons is only
    used for the percentage denominator, never for validating saved progress. */
 const validSlugs = new Set(allLessons.map((l) => l.slug));
-const labelBySlug = new Map(allLessons.map((l) => [l.slug, `${l.id} ${l.title}`]));
-const lessonLabel = (slug: string) => labelBySlug.get(slug) ?? slug;
 
 function readProgress(id: string): Set<string> {
   try {
@@ -102,8 +93,6 @@ export function StudentProvider({ children }: { children: ReactNode }) {
   const [student, setStudent] = useState<Student | null>(null);
   const [content, setContent] = useState<Record<string, LessonContent> | null>(null);
   const [completed, setCompleted] = useState<Set<string>>(new Set());
-  const [timeSpent, setTimeSpent] = useState<TimeMap>({});
-  const completedRef = useRef<Set<string>>(new Set());
 
   // Restore a session and re-open the course with the stored key.
   useEffect(() => {
@@ -116,8 +105,6 @@ export function StudentProvider({ children }: { children: ReactNode }) {
           if (students.some((s) => s.id === saved.id)) {
             setStudent({ id: saved.id, name: saved.name });
             setCompleted(readProgress(saved.id));
-            setTimeSpent(readTime(saved.id));
-            void flushReportQueue();
             try {
               const opened = await openCourse(saved.key, await fetchSealed());
               if (!cancelled) setContent(opened);
@@ -176,8 +163,6 @@ export function StudentProvider({ children }: { children: ReactNode }) {
     setStudent(next);
     setContent(opened);
     setCompleted(readProgress(next.id));
-    setTimeSpent(readTime(next.id));
-    void flushReportQueue();
     try {
       localStorage.setItem(SESSION_KEY, JSON.stringify({ ...next, key } satisfies Session));
     } catch { /* ignore */ }
@@ -188,7 +173,6 @@ export function StudentProvider({ children }: { children: ReactNode }) {
     setStudent(null);
     setContent(null);
     setCompleted(new Set());
-    setTimeSpent({});
     try { localStorage.removeItem(SESSION_KEY); } catch { /* ignore */ }
   }, []);
 
@@ -196,44 +180,10 @@ export function StudentProvider({ children }: { children: ReactNode }) {
     if (!student) return;
     setCompleted((prev) => {
       const next = new Set(prev);
-      const nowDone = !next.has(slug);
-      nowDone ? next.add(slug) : next.delete(slug);
+      next.has(slug) ? next.delete(slug) : next.add(slug);
       writeProgress(student.id, next);
-
-      const times = readTime(student.id);
-      const totalMins = Math.round(
-        Object.values(times).reduce((a, b) => a + b, 0) / 60,
-      );
-      void report({
-        student: student.name,
-        lesson: lessonLabel(slug),
-        status: nowDone ? 'done' : 'unmarked',
-        minutes: Math.round((times[slug] ?? 0) / 60),
-        total: totalMins,
-      });
       return next;
     });
-  }, [student]);
-
-  /* Runs an active-time clock for one lesson and reports the total when the
-     student leaves, so time shows up even on lessons they never tick off. */
-  const trackLesson = useCallback((slug: string) => {
-    if (!student) return () => {};
-    const stop = startLessonClock(student.id, slug, setTimeSpent);
-    return () => {
-      stop();
-      const times = readTime(student.id);
-      const secs = times[slug] ?? 0;
-      if (secs >= 60) {
-        void report({
-          student: student.name,
-          lesson: lessonLabel(slug),
-          status: completedRef.current.has(slug) ? 'done' : 'opened',
-          minutes: Math.round(secs / 60),
-          total: Math.round(Object.values(times).reduce((a, b) => a + b, 0) / 60),
-        });
-      }
-    };
   }, [student]);
 
   const reset = useCallback(() => {
@@ -263,16 +213,13 @@ export function StudentProvider({ children }: { children: ReactNode }) {
     }
   }, [student, completed]);
 
-  useEffect(() => { completedRef.current = completed; }, [completed]);
-
   const value = useMemo<Ctx>(() => ({
     ready, student, content,
     lesson: (slug) => content?.[slug] ?? null,
     signIn, signOut, completed,
     isDone: (slug) => completed.has(slug),
-    toggle, reset, exportCode, importCode, timeSpent, trackLesson,
-  }), [ready, student, content, signIn, signOut, completed, toggle, reset, exportCode,
-       importCode, timeSpent, trackLesson]);
+    toggle, reset, exportCode, importCode,
+  }), [ready, student, content, signIn, signOut, completed, toggle, reset, exportCode, importCode]);
 
   return <C.Provider value={value}>{children}</C.Provider>;
 }
