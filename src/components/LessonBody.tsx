@@ -9,12 +9,14 @@
  * and renders a locked state until there is some.
  */
 
+import { useEffect, useId, useState } from 'react';
 import Link from 'next/link';
 import SiteTour from '@/components/SiteTour';
 import VideoEmbed from '@/components/VideoEmbed';
 import { CompleteButton } from '@/components/Progress';
 import { Btn } from '@/components/ui';
 import { useStudent } from '@/lib/student';
+import { watchLesson } from '@/lib/autoComplete';
 import type { Resource, ResourceKind } from '@/lib/types';
 
 const RESOURCE_ICON: Record<ResourceKind, string> = {
@@ -54,8 +56,28 @@ export default function LessonBody({
   title: string;
   tour?: boolean;
 }) {
-  const { ready, student, lesson } = useStudent();
+  const { ready, student, lesson, isDone, toggle } = useStudent();
   const content = lesson(slug);
+  const frameId = useId().replace(/:/g, '') + '-video';
+  const [autoTicked, setAutoTicked] = useState(false);
+
+  const done = student ? isDone(slug) : false;
+  const hasVideo = Boolean(content?.video);
+
+  /* Tick the lesson off once they have actually been through it: most of the
+     video watched, or a few minutes of real attention on a lesson with no
+     video. Only while signed in, only once, and never over the top of a tick
+     they made themselves. */
+  useEffect(() => {
+    if (!student || done) return;
+    return watchLesson({
+      iframeId: hasVideo && !tour ? frameId : null,
+      onComplete: () => {
+        toggle(slug);
+        setAutoTicked(true);
+      },
+    });
+  }, [student, done, hasVideo, tour, frameId, slug, toggle]);
 
   /* The tour teaches the site itself and holds nothing private, so it sits
      above the locked/unlocked split and shows to everyone. */
@@ -113,8 +135,17 @@ export default function LessonBody({
   return (
     <>
       <div className="mt-8">
-        {tour ? <SiteTour /> : <VideoEmbed src={content.video} title={title} />}
+        {tour ? <SiteTour /> : <VideoEmbed src={content.video} title={title} id={frameId} />}
       </div>
+
+      {autoTicked && (
+        <p
+          role="status"
+          className="mt-6 rounded-card border-2 border-ink-line bg-lime/20 px-4 py-3 text-sm font-semibold"
+        >
+          Ticked off for you, since you have been through it. Use the button to undo that.
+        </p>
+      )}
 
       <div className="mt-6 flex flex-wrap items-center gap-3">
         <CompleteButton slug={slug} />

@@ -9,10 +9,17 @@ export default function VideoEmbed({
   src,
   title,
   poster,
+  id,
 }: {
   src: string;
   title: string;
   poster?: Resource[];
+  /**
+   * Give the iframe an id and YouTube's player API can be attached to it, which
+   * is how a lesson knows the video was actually watched. Omit it and this is a
+   * plain embed.
+   */
+  id?: string;
 }) {
   if (!src) {
     return (
@@ -41,10 +48,18 @@ export default function VideoEmbed({
     );
   }
 
+  // enablejsapi lets the page ask YouTube how far through the video is. origin
+  // is what makes that handshake work against an iframe the API did not create.
+  const embedSrc = id
+    ? `${src}${src.includes('?') ? '&' : '?'}enablejsapi=1` +
+      (typeof window === 'undefined' ? '' : `&origin=${encodeURIComponent(window.location.origin)}`)
+    : src;
+
   return (
     <div className="relative aspect-video w-full overflow-hidden rounded-card border border-cream/12 bg-black shadow-2xl shadow-brand-900/30">
       <iframe
-        src={src}
+        id={id}
+        src={embedSrc}
         title={title}
         className="absolute inset-0 h-full w-full"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"

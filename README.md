@@ -150,6 +150,25 @@ dismissed until you post a newer one). All of them are listed on the dashboard.
 Announcements are **public** — anyone can read them. Don't put access codes in one.
 As with everything else, run `npm run publish` to put it live.
 
+### Lessons tick themselves off
+
+A student does not have to remember to press the button. A lesson marks itself complete once
+they have actually been through it:
+
+- **A lesson with a video** — when they have watched about 85% of it. The site asks YouTube
+  how far through they are, so a three minute lesson and a twenty minute one are judged
+  fairly rather than on the same stopwatch.
+- **A lesson without one** (the tour, the two challenges) — after about four minutes of real
+  attention on the page.
+
+"Real attention" excludes a hidden tab, an unfocused window, and going idle, so a laptop left
+open on a lesson will not tick it off. If YouTube's player API is blocked or slow to load, the
+four minute rule quietly takes over as a backstop.
+
+They get a small note saying it happened, and the button still works for ticking early or
+undoing it. Both thresholds live at the top of `src/lib/autoComplete.ts` if you want them
+stricter or looser.
+
 ### How progress tracking works
 
 When a signed-in student marks a lesson complete, it saves to **their browser's
