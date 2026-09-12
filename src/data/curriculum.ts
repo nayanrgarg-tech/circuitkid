@@ -91,6 +91,10 @@ const rawUnits: (Omit<Unit, 'lessons'> & { lessons: Omit<Lesson, 'unitId'>[] })[
       { slug: "5b-3-tic-tac-toe-placing-the-marks", id: "5B.3", title: "Tic-Tac-Toe: Placing the Marks", blurb: "Pick a square, place your mark. It starts to feel like a game.", hasVideo: true, project: "B", },
       { slug: "5b-4-tic-tac-toe-two-player-tic-tac-toe", id: "5B.4", title: "Tic-Tac-Toe: Two Player Tic-Tac-Toe", blurb: "Take turns, spot the winner, handle a draw. Now go grab a friend.", hasVideo: true, project: "B", },
       { slug: "5b-5-tic-tac-toe-one-player-tic-tac-toe", id: "5B.5", title: "Tic-Tac-Toe: One Player Tic-Tac-Toe", blurb: "Write the opponent. Teach it to block you, then teach it to be really annoying.", hasVideo: true, project: "B", },
+      { slug: "5c-1-laser-harp-wiring", id: "5C.1", title: "Laser Harp: Wiring", blurb: "One laser, one light sensor, and a beam you can play. Get the build right before you make a sound.", hasVideo: false, project: "C", },
+      { slug: "5c-2-laser-harp-making-the-zones", id: "5C.2", title: "Laser Harp: Making the Zones", blurb: "Your hand breaking the beam is just a number dropping. Turn that number into zones.", hasVideo: false, project: "C", },
+      { slug: "5c-3-laser-harp-playing-the-notes", id: "5C.3", title: "Laser Harp: Playing the Notes", blurb: "Give every zone a note. Wave your hand and the thing actually plays.", hasVideo: false, project: "C", },
+      { slug: "5c-4-laser-harp-adding-the-leds", id: "5C.4", title: "Laser Harp: Adding the LEDs", blurb: "Light up the zone you are playing. It is not necessary. It looks great.", hasVideo: false, project: "C", },
     ],
   },
   {
@@ -106,7 +110,7 @@ const rawUnits: (Omit<Unit, 'lessons'> & { lessons: Omit<Lesson, 'unitId'>[] })[
 export const capstones: Capstone[] = [
   { letter: "A", name: "RC Car", blurb: "Build a two-wheel-drive car from a bare chassis, then drive it around your house.", skills: ["DC motors","L298N H-bridge","Chassis build","Speed control"], lessonCount: 3 },
   { letter: "B", name: "Tic-Tac-Toe", blurb: "An LED board, buttons, and an opponent you wrote yourself.", skills: ["Arrays & game state","Win detection","Simple AI","Big-board wiring"], lessonCount: 5 },
-  { letter: "C", name: "Laser Harp", blurb: "Invisible strings made of light. Wave your hand through a beam and it plays a note.", skills: ["Lasers & photoresistors","Calibration","Tone generation"], lessonCount: 0 },
+  { letter: "C", name: "Laser Harp", blurb: "Invisible strings made of light. Wave your hand through a beam and it plays a note.", skills: ["Lasers & photoresistors","Calibration","Tone generation"], lessonCount: 4 },
   { letter: "D", name: "Crack the Vault", blurb: "A keypad-locked vault with a servo bolt, an alarm, and a combination only you know.", skills: ["Keypad input","Servo lock","State machines"], lessonCount: 0 },
   { letter: "E", name: "Sentry Turret", blurb: "A pan-tilt turret that scans the room, locks onto a target and fires.", skills: ["Pan-tilt servos","Ultrasonic ranging","Target tracking"], lessonCount: 0 },
 ];
